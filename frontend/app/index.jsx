@@ -3,8 +3,13 @@ import HeartCircle from "../components/HeartCircle";
 import StatList from "../components/StatList";
 import CardList from "../components/CardList";
 import Button from "../components/Button";
-
+import { useRouter } from "expo-router";
 export default function Index() {
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    router.push("volunteer/VolunteerDashboard");
+  };
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View
@@ -23,6 +28,7 @@ export default function Index() {
       <View style={styles.buttonStyle}>
         <Button
           title={"Get Started Today"}
+          onPress={handleGetStarted}
           textStyle={{
             color: "#fff",
             fontWeight: "600",
