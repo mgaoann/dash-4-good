@@ -1,10 +1,10 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Card from "./Card";
 import { Building, Users, TrendingUp } from "lucide-react-native";
 
 export default function CardList() {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Card
         icon={<Building width={24} height={24} color="white" />}
         title="For Organizations"
@@ -20,7 +20,7 @@ export default function CardList() {
         title="Real Impact"
         description="See how your contributions help reduce waste"
       />
-    </ScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
