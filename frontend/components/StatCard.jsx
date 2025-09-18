@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
+import { SHADOWS } from "../styles/global";
 export default function StatCard({ title, description }) {
   return (
     <View style={styles.card}>
@@ -20,15 +21,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     width: "85%",
     alignSelf: "center",
-
-    // Shadow (iOS)
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-
-    // Shadow (Android)
-    elevation: 4, // shadow-md
+    ...SHADOWS.card,
   },
   container: {
     alignItems: "center",

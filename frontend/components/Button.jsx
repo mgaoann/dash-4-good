@@ -1,6 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { TouchableOpacity } from "react-native";
 import { StyleSheet, Text } from "react-native";
+import { appGradient, SHADOWS } from "../styles/global";
 export default function Button({
   title,
   onPress,
@@ -16,9 +17,9 @@ export default function Button({
       testID="my-Button"
     >
       <LinearGradient
-        colors={["#4CAF50", "#FFC107"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
+        colors={appGradient.colors}
+        start={appGradient.start}
+        end={appGradient.end}
         style={[styles.gradient, { height }]}
       >
         <Text style={[styles.text, textStyle]}>{title}</Text>
@@ -30,14 +31,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     borderRadius: 12,
     overflow: "hidden",
-
-    // Shadow (iOS)
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    // Shadow (Android)
-    elevation: 4,
+    ...SHADOWS.button,
   },
   gradient: {
     justifyContent: "center",

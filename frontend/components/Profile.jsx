@@ -10,9 +10,9 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
   profile: {
-    borderColor: "#b4bac2ff",
+    borderColor: "#56eb92ff",
     borderWidth: 1,
-    width: 60,
+    width: 70,
     height: 40,
     borderRadius: 10,
     justifyContent: "center",

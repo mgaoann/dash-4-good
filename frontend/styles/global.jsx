@@ -11,6 +11,11 @@ export const COLORS = {
   claimed: "#D4EDDA",
   completed: "#C3E6CB",
 };
+export const appGradient = {
+  colors: ["#4CAF50", "#FFC107"], // green to yellow
+  start: { x: 0, y: 0 },
+  end: { x: 1, y: 0 },
+};
 
 export const SIZES = {
   padding: 16,

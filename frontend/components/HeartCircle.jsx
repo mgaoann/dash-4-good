@@ -1,12 +1,13 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { Heart } from "lucide-react-native";
+import { appGradient } from "../styles/global";
 
 export default function HeartCircle() {
   return (
     <LinearGradient
-      colors={["#4CAF50", "#FFC107"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
+      colors={appGradient.colors}
+      start={appGradient.start}
+      end={appGradient.end}
       style={{
         width: 96,
         height: 96,

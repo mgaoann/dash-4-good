@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { appGradient, SHADOWS } from "../styles/global";
 
 export default function Card({ icon, title, description }) {
   return (
@@ -7,9 +8,9 @@ export default function Card({ icon, title, description }) {
       <View style={styles.container}>
         {/* Gradient Circle with Icon */}
         <LinearGradient
-          colors={["#4CAF50", "#FFC107"]} // green to yellow
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
+          colors={appGradient.colors}
+          start={appGradient.start}
+          end={appGradient.end}
           style={styles.iconCircle}
         >
           {icon}
@@ -33,15 +34,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     width: "85%",
     alignSelf: "center",
-
-    // Shadow (iOS)
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-
-    // Shadow (Android)
-    elevation: 4, // shadow-md
+    ...SHADOWS.card,
   },
   container: {
     flexDirection: "row",
