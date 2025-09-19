@@ -36,9 +36,6 @@ export default function Index() {
           }}
         />
       </View>
-      <View style={styles.stateContainer}>
-        <StatList />
-      </View>
     </ScrollView>
   );
 }
