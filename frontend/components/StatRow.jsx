@@ -3,7 +3,7 @@ import { COLORS, SHADOWS } from "../styles/global";
 import { LinearGradient } from "expo-linear-gradient";
 import { appGradient } from "../styles/global";
 
-export default function StateRow({
+export default function StatRow({
   availableCount,
   inProgressCount,
   completedCount,

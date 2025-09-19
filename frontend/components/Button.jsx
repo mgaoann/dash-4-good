@@ -6,7 +6,7 @@ export default function Button({
   title,
   onPress,
 
-  height = 50,
+  height = 40,
   style,
   textStyle,
 }) {
@@ -22,7 +22,9 @@ export default function Button({
         end={appGradient.end}
         style={[styles.gradient, { height }]}
       >
-        <Text style={[styles.text, textStyle]}>{title}</Text>
+        <Text style={[styles.text, { lineHeight: height }, textStyle]}>
+          {title}
+        </Text>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -42,5 +44,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
+    textAlign: "center",
   },
 });

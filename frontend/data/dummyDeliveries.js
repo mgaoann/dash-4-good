@@ -1,40 +1,58 @@
-[
+export const activeDeliveries = [
   {
-    id: "d1",
-    title: "Surplus Meals",
-    status: "in_progress", 
-    from: "Local Restaurant",
-    to: "Homeless Shelter",
-    items: "Prepared meals (20 portions)",
-    distanceMiles: 2.3,
-    etaMin: 25,
-    provider: "Green Valley Grocers",
-    coords: { from: [lat, lng], to: [lat, lng] } 
+    id: "1",
+    title: "Food Delivery",
+    pickup: "Community Center",
+    dropoff: "Food Bank",
+    items: "3 boxes of canned goods",
   },
- 
-]
-,
-{
-    id: "d2",
+  {
+    id: "2",
+    title: "Grocery Run",
+    pickup: "SuperMart",
+    dropoff: "Hope Shelter",
+    items: "2 bags of groceries",
+  },
+];
+export const availableDeliveries = [
+  {
+    id: "101",
     title: "Fresh Produce",
-    status: "available",
-    from: "Community Farm",
-    to: "Food Bank",
-    items: "Vegetables (30 lbs)",
-    distanceMiles: 4.1,
-    etaMin: 40,
-    provider: "Sunny Fields Farm",
-    coords: { from: [34.0522, -118.2437], to: [34.0407, -118.2468] }
-},
-{
-    id: "d3",
-    title: "Bakery Goods",
-    status: "completed",
-    from: "Downtown Bakery",
-    to: "Youth Center",
-    items: "Bread loaves (15), Pastries (25)",
-    distanceMiles: 1.7,
-    etaMin: 15,
-    provider: "Downtown Bakery",
-    coords: { from: [34.0456, -118.2500], to: [34.0489, -118.2550] }
-}
+    pickup: "Farmers Market",
+    dropoff: "Downtown Food Bank",
+    items: "10 bags of fruits and vegetables",
+    distance: "5 km",
+    estimatedTime: "20 min",
+    organization: "GreenHarvest Org",
+  },
+  {
+    id: "102",
+    title: "School Supplies",
+    pickup: "Stationery Warehouse",
+    dropoff: "Riverdale Elementary",
+    items: "50 notebooks + 20 pens",
+    distance: "12 km",
+    estimatedTime: "35 min",
+    organization: "EduAid Foundation",
+  },
+  {
+    id: "103",
+    title: "Bread & Dairy",
+    pickup: "Sunrise Bakery",
+    dropoff: "Community Kitchen",
+    items: "15 loaves of bread + 10 milk cartons",
+    distance: "3 km",
+    estimatedTime: "15 min",
+    organization: "City Kitchen",
+  },
+  {
+    id: "104",
+    title: "Clothing Donation",
+    pickup: "Charity Drop-off Point",
+    dropoff: "Downtown Homeless Shelter",
+    items: "3 bags of winter coats",
+    distance: "8 km",
+    estimatedTime: "25 min",
+    organization: "Warm Hearts Charity",
+  },
+];

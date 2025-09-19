@@ -1,6 +1,8 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Profile from "../../components/Profile";
-import StatsRow from "../../components/StatsRow";
+import StatRow from "../../components/StatRow";
+import ActiveDeliveries from "../../components/ActiveDeliveries";
+import AvailableDeliveries from "../../components/Available Deliveries";
 
 export default function VolunteerDashboard() {
   // Dummy data for now
@@ -18,7 +20,7 @@ export default function VolunteerDashboard() {
           <Profile />
         </View>
         <View style={styles.StateRowContainer}>
-          <StatsRow
+          <StatRow
             availableCount={available}
             inProgressCount={inProgress}
             completedCount={completed}
@@ -27,9 +29,10 @@ export default function VolunteerDashboard() {
       </View>
       <View style={styles.divider} />
       <View style={styles.DeliverierContainer}>
-        <Text style={{ fontWeight: "bold", fontWeight: "600", fontSize: 15 }}>
-          Active Deliveries
-        </Text>
+        <ActiveDeliveries />
+      </View>
+      <View>
+        <AvailableDeliveries />
       </View>
     </ScrollView>
   );
