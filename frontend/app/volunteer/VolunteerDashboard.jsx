@@ -1,14 +1,15 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Profile from "../../components/Profile";
 import StatRow from "../../components/StatRow";
+import { useState } from "react";
 import ActiveDeliveries from "../../components/ActiveDeliveries";
 import AvailableDeliveries from "../../components/Available Deliveries";
 
 export default function VolunteerDashboard() {
   // Dummy data for now
-  const available = 2;
-  const inProgress = 1;
-  const completed = 0;
+  const [available, setAvailable] = useState(2);
+  const [inProgress, setInProgress] = useState(1);
+  const [completed, setCompleted] = useState(0);
   return (
     <ScrollView>
       <View style={styles.container}>

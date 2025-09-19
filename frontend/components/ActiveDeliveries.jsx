@@ -59,6 +59,7 @@ export default function ActiveDeliveries() {
       <FlatList
         data={activeDeliveries}
         renderItem={renderCard}
+        scrollEnabled={false}
         keyExtractor={(item) => item.id}
       />
     </View>
