@@ -32,7 +32,7 @@ export default function Index() {
           textStyle={{
             color: "#fff",
             fontWeight: "600",
-            fontSize: 18,
+            fontSize: 15,
           }}
         />
       </View>
