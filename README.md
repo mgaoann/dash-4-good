@@ -39,4 +39,4 @@ To get started quickly and focus on a functional MVP, here are some suggested ta
 - Collaborators can add their suggestions or pick tasks to start working on
 
 ## Contributors
-Ayesha Dawodi – Suggested MVP features and task priorities
+Ayesha Dawodi – Suggested MVP features and task priorities; implemented Volunteer Dashboard page, Welcome page, and Profile page.
