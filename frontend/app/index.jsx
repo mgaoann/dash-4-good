@@ -7,8 +7,15 @@ import { useRouter } from "expo-router";
 export default function Index() {
   const router = useRouter();
 
+  // TODO: (Frontend B) When Auth is ready:
+  // 1. Replace this direct navigation with routing to Login / Signup page.
+  // 2. After login, check user role (volunteer / organization).
+  // 3. Redirect based on role:
+  //    - Volunteer -> VolunteerDashboard
+  //    - Organization -> OrganizationDashboard
+
   const handleGetStarted = () => {
-    router.push("volunteer/VolunteerDashboard");
+    router.push("volunteer/VolunteerDashboard"); // temporary route for now
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>

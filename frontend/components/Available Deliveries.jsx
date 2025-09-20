@@ -2,6 +2,11 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import { MapPin, Package, Car, Clock } from "lucide-react-native";
 import { availableDeliveries } from "../data/dummyDeliveries";
 import Button from "./Button";
+// TODO (Backend): Replace dummy data (../data/dummyDeliveries) with Firestore "deliveries" collection
+// TODO (Backend): Ensure Claim Delivery button updates Firestore (assigns delivery to logged-in volunteer)
+// TODO (Backend): Fetch real-time status updates (available -> claimed -> completed)
+// TODO (Backend): Populate distance, estimatedTime, organization fields dynamically from backend
+// TODO (Map/Geo): Use Google Maps API to calculate and show pickup -> dropoff route + distance/time
 
 export default function AvailableDeliveries({ setSelectedRequest }) {
   const renderCard = ({ item }) => {

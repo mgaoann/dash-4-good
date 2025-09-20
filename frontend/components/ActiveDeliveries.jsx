@@ -7,6 +7,11 @@ import {
 } from "react-native";
 import { MapPin, Package, Map, CheckCircle } from "lucide-react-native";
 import { activeDeliveries } from "../data/dummyDeliveries";
+// TODO (Map/Geo): Hook up Google Maps API so "View Route" opens live map directions
+// between pickup and dropoff
+// TODO (Backend): Update Firestore when delivery is marked complete
+// (set status = "completed" and free it from volunteer’s active list)
+// TODO (Notifications): Send push notification to organization that delivery is completed
 
 export default function ActiveDeliveries() {
   const completeDelivery = (id) => {

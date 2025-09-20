@@ -1,9 +1,17 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Profile from "../../components/Profile";
 import StatRow from "../../components/StatRow";
+
 import { useState } from "react";
 import ActiveDeliveries from "../../components/ActiveDeliveries";
 import AvailableDeliveries from "../../components/Available Deliveries";
+// TODO (Backend): Replace dummy state with live data from Firestore
+//  - Fetch volunteer stats (available, inProgress, completed) from DB
+//  - Update in real-time when deliveries are claimed or completed
+
+// TODO (Notifications):
+//  - Ensure push notifications update these counts when status changes
+//  - Example: notify volunteer when a new delivery request nearby is posted
 
 export default function VolunteerDashboard() {
   // Dummy data for now

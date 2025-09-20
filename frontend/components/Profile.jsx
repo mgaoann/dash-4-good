@@ -1,8 +1,12 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-
+import { useRouter } from "expo-router";
 export default function Profile() {
+  const router = useRouter();
+  const openProfile = () => {
+    router.push("/profilePage");
+  };
   return (
-    <TouchableOpacity style={styles.profile}>
+    <TouchableOpacity onPress={openProfile} style={styles.profile}>
       <Text style={styles.profileText}>Profile</Text>
     </TouchableOpacity>
   );
