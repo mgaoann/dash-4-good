@@ -7,6 +7,7 @@ export default function StatRow({
   availableCount,
   inProgressCount,
   completedCount,
+  labels = ["Available", "In Progress", "Completed"],
 }) {
   return (
     <View style={styles.container}>
@@ -17,15 +18,15 @@ export default function StatRow({
         end={appGradient.end}
       >
         <Text style={styles.countText}>{availableCount}</Text>
-        <Text style={styles.labelText}>Available</Text>
+        <Text style={styles.labelText}>{labels[0]}</Text>
       </LinearGradient>
       <View style={[styles.card, { backgroundColor: "#2a5cf4ff" }]}>
         <Text style={styles.countText}>{inProgressCount}</Text>
-        <Text style={styles.labelText}>In Progress</Text>
+        <Text style={styles.labelText}>{labels[1]}</Text>
       </View>
       <View style={[styles.card, { backgroundColor: "#777a82ff" }]}>
         <Text style={styles.countText}>{completedCount}</Text>
-        <Text style={styles.labelText}>Completed</Text>
+        <Text style={styles.labelText}>{labels[2]}</Text>
       </View>
     </View>
   );

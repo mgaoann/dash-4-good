@@ -1,8 +1,14 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-export default function Profile() {
+
+// target: "volunteer" | "organization"
+export default function Profile({ target = "volunteer" }) {
   const router = useRouter();
   const openProfile = () => {
+    if (target === "organization") {
+      router.push("/organization/OrganizationProfile");
+      return;
+    }
     router.push("/profilePage");
   };
   return (
