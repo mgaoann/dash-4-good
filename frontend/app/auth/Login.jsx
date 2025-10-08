@@ -50,7 +50,7 @@ export default function Login() {
 
       <View style={styles.altRow}>
         <Text style={styles.altText}>New here?</Text>
-        <TouchableOpacity onPress={() => router.push("/index") }>
+        <TouchableOpacity onPress={() => router.push("/") }>
           <Text style={styles.altLink}> Create an account</Text>
         </TouchableOpacity>
       </View>
