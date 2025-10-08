@@ -39,7 +39,7 @@ export default function Index() {
         }}
       >
         <HeartCircle />
-        <Text style={styles.heading}>Dash-4-Good</Text>
+        <Text style={styles.heading}>Dash 4 Good</Text>
         <Text style={styles.subtitle}>
           Connecting communities to reduce food waste through volunteer
           deliveries
@@ -51,28 +51,6 @@ export default function Index() {
       <View style={styles.roleSelection}>
         <Text style={styles.roleTitle}>Choose Your Role</Text>
         <View style={styles.roleOptions}>
-          <TouchableOpacity
-            style={[
-              styles.roleOption,
-              selectedRole === "volunteer" && styles.roleOptionSelected,
-            ]}
-            onPress={() => setSelectedRole("volunteer")}
-          >
-            <Users size={24} color={selectedRole === "volunteer" ? "#fff" : "#4CAF50"} />
-            <Text style={[
-              styles.roleText,
-              selectedRole === "volunteer" && styles.roleTextSelected,
-            ]}>
-              For Volunteers
-            </Text>
-            <Text style={[
-              styles.roleSubtext,
-              selectedRole === "volunteer" && styles.roleSubtextSelected,
-            ]}>
-              Help deliver supplies to those in need
-            </Text>
-          </TouchableOpacity>
-
           <TouchableOpacity
             style={[
               styles.roleOption,
@@ -92,6 +70,28 @@ export default function Index() {
               selectedRole === "organization" && styles.roleSubtextSelected,
             ]}>
               Post requests and manage deliveries
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.roleOption,
+              selectedRole === "volunteer" && styles.roleOptionSelected,
+            ]}
+            onPress={() => setSelectedRole("volunteer")}
+          >
+            <Users size={24} color={selectedRole === "volunteer" ? "#fff" : "#4CAF50"} />
+            <Text style={[
+              styles.roleText,
+              selectedRole === "volunteer" && styles.roleTextSelected,
+            ]}>
+              For Volunteers
+            </Text>
+            <Text style={[
+              styles.roleSubtext,
+              selectedRole === "volunteer" && styles.roleSubtextSelected,
+            ]}>
+              Help deliver supplies to those in need
             </Text>
           </TouchableOpacity>
         </View>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   heading: {
-    fontSize: 24,
+    fontSize: 35,
     fontWeight: "bold",
   },
   subtitle: {
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     maxWidth: 384,
     alignSelf: "center",
+    fontSize: 20,
   },
   roleSelection: {
     paddingHorizontal: 20,

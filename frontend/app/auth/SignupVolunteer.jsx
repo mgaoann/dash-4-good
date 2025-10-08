@@ -30,12 +30,12 @@ export default function SignupVolunteer() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Create your volunteer account</Text>
+      <Text style={styles.title}>Create a Volunteer Account</Text>
       <TextInput style={styles.input} placeholder="Full name" placeholderTextColor="#6B7280" value={form.name} onChangeText={(v) => update("name", v)} />
       <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#6B7280" value={form.email} onChangeText={(v) => update("email", v)} autoCapitalize="none" />
       <TextInput style={styles.input} placeholder="Phone (optional)" placeholderTextColor="#6B7280" value={form.phone} onChangeText={(v) => update("phone", v)} />
       <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#6B7280" value={form.password} onChangeText={(v) => update("password", v)} secureTextEntry />
-      <Button title="Sign up" onPress={onSignup} style={{ marginTop: 12 }} />
+      <Button title="Sign Up" onPress={onSignup} style={{ marginTop: 12 }} />
       <View style={styles.altRow}>
         <Text style={styles.altText}>Already have an account?</Text>
         <TouchableOpacity onPress={() => router.push("/auth/Login") }>

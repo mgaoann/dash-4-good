@@ -29,7 +29,7 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Log in</Text>
+      <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.input}
         placeholder="Email or Username"
@@ -46,7 +46,7 @@ export default function Login() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Log in" onPress={onLogin} style={{ marginTop: 12 }} />
+      <Button title="Sign In" onPress={onLogin} style={{ marginTop: 12 }} />
 
       <View style={styles.altRow}>
         <Text style={styles.altText}>New here?</Text>
