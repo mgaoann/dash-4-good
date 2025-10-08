@@ -12,6 +12,29 @@ export default function RootLayout() {
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
+
+      {/* Auth Routes */}
+      <Stack.Screen
+        name="auth/Login"
+        options={{
+          headerShown: true,
+          headerTitle: "",
+        }}
+      />
+      <Stack.Screen
+        name="auth/SignupVolunteer"
+        options={{
+          headerShown: true,
+          headerTitle: "",
+        }}
+      />
+      <Stack.Screen
+        name="auth/SignupOrganization"
+        options={{
+          headerShown: true,
+          headerTitle: "",
+        }}
+      />
       
       {/* Volunteer Routes */}
       <Stack.Screen

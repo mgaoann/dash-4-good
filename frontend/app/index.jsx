@@ -24,10 +24,11 @@ export default function Index() {
       return;
     }
     
+    // Navigate to role-specific signup flows
     if (selectedRole === "volunteer") {
-      router.push("volunteer/VolunteerDashboard");
+      router.push("auth/SignupVolunteer");
     } else if (selectedRole === "organization") {
-      router.push("organization/OrganizationDashboard");
+      router.push("auth/SignupOrganization");
     }
   };
   return (
@@ -107,6 +108,14 @@ export default function Index() {
           }}
         />
       </View>
+
+      {/* Auth link for existing users */}
+      <View style={styles.loginRow}>
+        <Text style={styles.loginPrompt}>Already have an account?</Text>
+        <TouchableOpacity onPress={() => router.push("auth/Login")}>
+          <Text style={styles.loginLink}> Log in</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
@@ -183,5 +192,20 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     paddingHorizontal: 20,
+  },
+  loginRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 28,
+  },
+  loginPrompt: {
+    color: "#6B7280",
+    fontSize: 14,
+  },
+  loginLink: {
+    color: "#4CAF50",
+    fontSize: 14,
+    fontWeight: "600",
   },
 });

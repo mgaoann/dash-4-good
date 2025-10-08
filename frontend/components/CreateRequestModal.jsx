@@ -92,6 +92,7 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
             <TextInput
               style={styles.input}
               placeholder="e.g., Fresh Produce Delivery"
+              placeholderTextColor="#6B7280"
               value={formData.title}
               onChangeText={(value) => handleInputChange("title", value)}
             />
@@ -105,6 +106,7 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
               <TextInput
                 style={[styles.input, styles.inputWithIconText]}
                 placeholder="e.g., Farmers Market"
+                placeholderTextColor="#6B7280"
                 value={formData.pickup}
                 onChangeText={(value) => handleInputChange("pickup", value)}
               />
@@ -119,6 +121,7 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
               <TextInput
                 style={[styles.input, styles.inputWithIconText]}
                 placeholder="e.g., Downtown Food Bank"
+                placeholderTextColor="#6B7280"
                 value={formData.dropoff}
                 onChangeText={(value) => handleInputChange("dropoff", value)}
               />
@@ -133,6 +136,7 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
               <TextInput
                 style={[styles.input, styles.inputWithIconText]}
                 placeholder="e.g., 10 bags of fruits and vegetables"
+                placeholderTextColor="#6B7280"
                 value={formData.items}
                 onChangeText={(value) => handleInputChange("items", value)}
               />
@@ -145,6 +149,7 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
             <TextInput
               style={[styles.input, styles.textArea]}
               placeholder="Any special instructions or additional information..."
+              placeholderTextColor="#6B7280"
               value={formData.description}
               onChangeText={(value) => handleInputChange("description", value)}
               multiline
@@ -189,6 +194,7 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
               <TextInput
                 style={[styles.input, styles.inputWithIconText]}
                 placeholder="e.g., 20 minutes"
+                placeholderTextColor="#6B7280"
                 value={formData.estimatedTime}
                 onChangeText={(value) => handleInputChange("estimatedTime", value)}
               />
