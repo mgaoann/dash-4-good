@@ -8,6 +8,7 @@ import ActiveRequests from "../../components/ActiveRequests";
 import PendingRequests from "../../components/PendingRequests";
 import CreateRequestModal from "../../components/CreateRequestModal";
 import OrganizationCompletedDeliveries from "../../components/OrganizationCompletedDeliveries";
+import EditRequestModal from "../../components/EditRequestModal";
 import { orgInfo, orgPendingRequests, orgActiveRequests, orgCompletedDeliveries } from "../../data/dummyOrganization";
 
 // TODO (Backend): Replace dummy state with live data from Firestore
@@ -27,6 +28,7 @@ export default function OrganizationDashboard() {
   const [activeItems, setActiveItems] = useState(orgActiveRequests.filter(r => r.organizationId === org.id));
   const [completedItems, setCompletedItems] = useState(orgCompletedDeliveries.filter(r => r.organizationId === org.id));
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingRequest, setEditingRequest] = useState(null);
 
   const pending = pendingItems.length;
   const active = activeItems.length;
@@ -44,6 +46,15 @@ export default function OrganizationDashboard() {
     };
     setActiveItems([withOrg, ...activeItems]);
     setShowCreateModal(false);
+  };
+
+  const handleEditRequest = (updated) => {
+    setPendingItems(pendingItems.map((r) => (r.id === updated.id ? updated : r)));
+    setEditingRequest(null);
+  };
+
+  const handleDeleteRequest = (id) => {
+    setPendingItems(pendingItems.filter((r) => r.id !== id));
   };
 
   return (
@@ -104,7 +115,11 @@ export default function OrganizationDashboard() {
 
       {/* Pending Requests (visible to volunteers as available) */}
       <View style={styles.requestsContainer}>
-        <PendingRequests items={pendingItems} />
+        <PendingRequests
+          items={pendingItems}
+          onEdit={(id) => setEditingRequest(pendingItems.find((r) => r.id === id))}
+          onDelete={(id) => handleDeleteRequest(id)}
+        />
       </View>
 
       {/* Completed Deliveries (history/logs) */}
@@ -118,6 +133,13 @@ export default function OrganizationDashboard() {
         onClose={() => setShowCreateModal(false)}
         orgName={org.name}
         onCreate={handleCreateRequest}
+      />
+
+      <EditRequestModal
+        visible={!!editingRequest}
+        onClose={() => setEditingRequest(null)}
+        request={editingRequest}
+        onSave={handleEditRequest}
       />
     </ScrollView>
   );

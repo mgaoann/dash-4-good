@@ -60,6 +60,13 @@ export default function RootLayout() {
           headerTitle: "",
         }}
       />
+      <Stack.Screen
+        name="organization/EditOrganizationInfo"
+        options={{
+          headerShown: true,
+          headerTitle: "",
+        }}
+      />
       
       {/* Shared Routes */}
       <Stack.Screen name="profilePage" options={{ title: "Profile" }} />

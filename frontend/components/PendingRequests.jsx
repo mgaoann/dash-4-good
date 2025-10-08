@@ -9,12 +9,14 @@ import { MapPin, Package, Clock, Edit, Trash2 } from "lucide-react-native";
 export default function PendingRequests({ items = [], onEdit, onDelete }) {
   const editRequest = (id) => {
     console.log("Edit request:", id);
-    // TODO: Navigate to edit request screen
+    // TODO (Backend): Navigate to edit flow or prefill modal from DB
+    if (onEdit) onEdit(id);
   };
 
   const deleteRequest = (id) => {
     console.log("Delete request:", id);
-    // TODO: Show confirmation dialog and delete from Firestore
+    // TODO (Backend): Delete in Firestore; optimistic update here
+    if (onDelete) onDelete(id);
   };
 
   const renderCard = ({ item }) => (
@@ -88,7 +90,7 @@ export default function PendingRequests({ items = [], onEdit, onDelete }) {
 const styles = StyleSheet.create({
   section: {
     marginTop: 9,
-    paddingHorizontal: 20,
+    // paddingHorizontal removed so width matches siblings; parent provides padding
   },
   sectionTitle: {
     fontSize: 16,
@@ -99,13 +101,13 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 12, // align with other cards
     shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
     marginBottom: 15,
-    borderLeftWidth: 4,
+    borderLeftWidth: 4, // consistent accent
     borderLeftColor: "#F59E0B",
   },
   headerRow: {

@@ -112,10 +112,7 @@ export default function OrganizationProfile() {
         ) : (
           <Text style={[styles.infoText, { color: "#374151" }]}>{org.description}</Text>
         )}
-        <TouchableOpacity
-          style={[styles.settingButton, { marginTop: 10 }]}
-          onPress={() => setEditing(!editing)}
-        >
+        <TouchableOpacity style={[styles.settingButton, { marginTop: 10 }]} onPress={() => setEditing(!editing)}>
           <Text style={styles.settingText}>{editing ? "Save" : "Edit Profile"}</Text>
         </TouchableOpacity>
       </View>
@@ -187,7 +184,7 @@ export default function OrganizationProfile() {
           <Text style={styles.sectionTitle}>Organization Settings</Text>
         </View>
 
-        <TouchableOpacity style={styles.settingButton}>
+        <TouchableOpacity style={styles.settingButton} onPress={() => router.push("/organization/EditOrganizationInfo")}>
           <Text style={styles.settingText}>Edit Organization Info</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.settingButton}>
