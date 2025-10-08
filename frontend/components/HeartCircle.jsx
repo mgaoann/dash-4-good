@@ -9,12 +9,12 @@ export default function HeartCircle() {
       start={appGradient.start}
       end={appGradient.end}
       style={{
-        width: 96,
-        height: 96,
+        width: 80,
+        height: 80,
         borderRadius: 48,
         justifyContent: "center",
         alignItems: "center",
-        marginBottom: 24,
+        marginBottom: 20,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,

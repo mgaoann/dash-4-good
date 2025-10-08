@@ -26,7 +26,7 @@ export default function SignupOrganization() {
       Alert.alert("Missing info", "Organization name, email and password are required.");
       return;
     }
-    // MOCK: Directly route to OrganizationDashboard
+    // Need to properly implement creation
     router.replace("/organization/OrganizationDashboard");
   };
 

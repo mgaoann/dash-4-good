@@ -24,7 +24,7 @@ export default function SignupVolunteer() {
       Alert.alert("Missing info", "Please fill all required fields.");
       return;
     }
-    // MOCK: Directly route to VolunteerDashboard
+    // Need to properly implement account creation
     router.replace("/volunteer/VolunteerDashboard");
   };
 
