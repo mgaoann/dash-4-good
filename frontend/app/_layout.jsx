@@ -21,6 +21,10 @@ export default function RootLayout() {
           name="tabs-organization"
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="volunteer/EditVolunteerProfile"
+          options={{ headerShown: true, headerTitle: "Edit Profile" }}
+        />
 
         {/* Auth Routes */}
         <Stack.Screen

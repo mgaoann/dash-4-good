@@ -53,9 +53,17 @@ export default function ProfilePage({ userRole = "volunteer" }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.headerText}>
-        <Text>Manage your account settings</Text>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 30 }}
+    >
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>
+          {userRole === "organization"
+            ? "Organization Profile"
+            : "Volunteer Profile"}
+        </Text>
+        <Text style={styles.headerSubtitle}>Manage your account</Text>
       </View>
 
       <View style={styles.card}>
@@ -90,6 +98,14 @@ export default function ProfilePage({ userRole = "volunteer" }) {
           <Text style={styles.infoText}>Downtown District, City</Text>
         </View>
       </View>
+      {userRole === "volunteer" && (
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => router.push("/volunteer/EditVolunteerProfile")}
+        >
+          <Text style={styles.editButtonText}>Edit Profile</Text>
+        </TouchableOpacity>
+      )}
 
       {/* Stats */}
       <View style={styles.card}>
@@ -198,12 +214,25 @@ function Achievement({ color, title, subtitle }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 20,
-    marginVertical: 20,
+    backgroundColor: "#F9FAFB",
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
-  headerText: {
-    marginVertical: 10,
+  header: {
+    alignItems: "center",
+    marginBottom: 16,
   },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#1F2937",
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginTop: 4,
+  },
+
   card: {
     backgroundColor: "#fff",
 
@@ -280,4 +309,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logoutText: { color: "#fff", fontWeight: "bold", marginLeft: 6 },
+  editButton: {
+    backgroundColor: "#22c55e",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 8,
+  },
+  editButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
 });

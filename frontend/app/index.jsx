@@ -25,7 +25,8 @@ export default function Index() {
         <HeartCircle />
         <Text style={styles.heading}>Dash 4 Good</Text>
         <Text style={styles.subtitle}>
-          Connecting communities to reduce food waste through volunteer deliveries
+          Connecting communities to reduce food waste through volunteer
+          deliveries
         </Text>
       </View>
 
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   heading: {
-    fontSize: 35,
+    fontSize: 30,
     fontWeight: "bold",
   },
   subtitle: {
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     maxWidth: 384,
     alignSelf: "center",
-    fontSize: 20,
+    fontSize: 17,
   },
   buttonStyle: {
     marginTop: 20,

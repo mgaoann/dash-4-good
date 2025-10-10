@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import {
   Building2,
   Mail,
@@ -20,7 +27,7 @@ export default function OrganizationProfile() {
   // TODO (Auth): hydrate org data from backend for logged-in org
   const [org, setOrg] = useState(orgInfo);
   const [editing, setEditing] = useState(false);
-  
+
   // TODO: Auth -> Replace this with Firebase Auth signOut()
   // After logout, redirect user back to Welcome/Login screen
   const onLogout = () => {
@@ -45,7 +52,10 @@ export default function OrganizationProfile() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 30 }}
+    >
       <View style={styles.headerText}>
         <Text>Manage your organization profile</Text>
       </View>
@@ -99,7 +109,14 @@ export default function OrganizationProfile() {
           )}
         </View>
         <View style={[styles.infoRow, { alignItems: "flex-start" }]}>
-          <Text style={[styles.infoText, { marginLeft: 0, color: "#374151", fontWeight: "600" }]}>About</Text>
+          <Text
+            style={[
+              styles.infoText,
+              { marginLeft: 0, color: "#374151", fontWeight: "600" },
+            ]}
+          >
+            About
+          </Text>
         </View>
         {editing ? (
           <TextInput
@@ -110,10 +127,17 @@ export default function OrganizationProfile() {
             onChangeText={(v) => setOrg({ ...org, description: v })}
           />
         ) : (
-          <Text style={[styles.infoText, { color: "#374151" }]}>{org.description}</Text>
+          <Text style={[styles.infoText, { color: "#374151" }]}>
+            {org.description}
+          </Text>
         )}
-        <TouchableOpacity style={[styles.settingButton, { marginTop: 10 }]} onPress={() => setEditing(!editing)}>
-          <Text style={styles.settingText}>{editing ? "Save" : "Edit Profile"}</Text>
+        <TouchableOpacity
+          style={[styles.settingButton, { marginTop: 10 }]}
+          onPress={() => setEditing(!editing)}
+        >
+          <Text style={styles.settingText}>
+            {editing ? "Save" : "Edit Profile"}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -184,7 +208,10 @@ export default function OrganizationProfile() {
           <Text style={styles.sectionTitle}>Organization Settings</Text>
         </View>
 
-        <TouchableOpacity style={styles.settingButton} onPress={() => router.push("/organization/EditOrganizationInfo")}>
+        <TouchableOpacity
+          style={styles.settingButton}
+          onPress={() => router.push("/organization/EditOrganizationInfo")}
+        >
           <Text style={styles.settingText}>Edit Organization Info</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.settingButton}>
@@ -202,17 +229,30 @@ export default function OrganizationProfile() {
           <Text style={styles.sectionTitle}>Completed Deliveries (Log)</Text>
         </View>
         {orgCompletedDeliveries.map((d) => (
-          <View key={d.id} style={[styles.achievement, { backgroundColor: "#F3F4F6" }]}>
-            <View style={[styles.achievementIcon, { backgroundColor: "#10B981" }]}>
+          <View
+            key={d.id}
+            style={[styles.achievement, { backgroundColor: "#F3F4F6" }]}
+          >
+            <View
+              style={[styles.achievementIcon, { backgroundColor: "#10B981" }]}
+            >
               <CheckCircle size={18} color="#fff" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.achievementTitle}>{d.title}</Text>
-              <Text style={styles.achievementSubtitle}>{d.pickup} → {d.dropoff}</Text>
-              <Text style={styles.achievementSubtitle}>Volunteer: {d.volunteer} • {d.completedAt}</Text>
+              <Text style={styles.achievementSubtitle}>
+                {d.pickup} → {d.dropoff}
+              </Text>
+              <Text style={styles.achievementSubtitle}>
+                Volunteer: {d.volunteer} • {d.completedAt}
+              </Text>
             </View>
-            <TouchableOpacity style={[styles.settingButton, { borderColor: "#D1D5DB" }]}> 
-              <Text style={[styles.settingText, { color: "#374151" }]}>Contact</Text>
+            <TouchableOpacity
+              style={[styles.settingButton, { borderColor: "#D1D5DB" }]}
+            >
+              <Text style={[styles.settingText, { color: "#374151" }]}>
+                Contact
+              </Text>
             </TouchableOpacity>
           </View>
         ))}
@@ -257,8 +297,9 @@ function Achievement({ color, title, subtitle }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 20,
-    marginVertical: 20,
+    backgroundColor: "#F9FAFB",
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
   headerText: {
     marginVertical: 10,
@@ -300,9 +341,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 8,
   },
-  statItem: { 
-    width: "48%", 
-    alignItems: "center", 
+  statItem: {
+    width: "48%",
+    alignItems: "center",
     marginBottom: 12,
   },
   statHeader: {
@@ -310,9 +351,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 4,
   },
-  statValue: { 
-    fontSize: 20, 
-    fontWeight: "bold", 
+  statValue: {
+    fontSize: 20,
+    fontWeight: "bold",
     color: "#4CAF50",
     marginLeft: 4,
   },
