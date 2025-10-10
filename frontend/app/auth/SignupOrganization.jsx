@@ -1,4 +1,12 @@
-import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import Button from "../../components/Button";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -23,11 +31,14 @@ export default function SignupOrganization() {
 
   const onSignup = () => {
     if (!form.orgName || !form.email || !form.password) {
-      Alert.alert("Missing info", "Organization Name, email and password are required.");
+      Alert.alert(
+        "Missing info",
+        "Organization Name, email and password are required."
+      );
       return;
     }
     // Need to properly implement creation
-    router.replace("/organization/OrganizationDashboard");
+    router.replace("/tabs-organization/home");
   };
 
   return (

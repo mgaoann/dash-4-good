@@ -1,4 +1,13 @@
-import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 import Button from "../../components/Button";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -21,7 +30,7 @@ export default function SignupVolunteer() {
       return;
     }
     // TODO: implement actual account creation
-    router.replace("/volunteer/VolunteerDashboard");
+    router.replace("/tabs-volunteer/home");
   };
 
   // Detect small vs large screen

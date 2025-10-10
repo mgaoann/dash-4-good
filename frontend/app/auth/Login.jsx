@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import Button from "../../components/Button";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -21,16 +28,18 @@ export default function Login() {
     }
     // MOCK: Send everyone to volunteer by default; if email contains "org", send to organization
     if (email.toLowerCase().includes("org")) {
-      router.replace("/organization/OrganizationDashboard");
+      router.replace("/tabs-organization/home");
     } else {
-      router.replace("/volunteer/VolunteerDashboard");
+      router.replace("/tabs-volunteer/home");
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
-      <Text style={styles.subtitle}>Access your account to manage deliveries or requests</Text>
+      <Text style={styles.subtitle}>
+        Access your account to manage deliveries or requests
+      </Text>
 
       <View style={styles.form}>
         <TextInput
@@ -49,7 +58,11 @@ export default function Login() {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <TouchableOpacity onPress={() => Alert.alert("Forgot Password", "Reset functionality coming soon.")}>
+        <TouchableOpacity
+          onPress={() =>
+            Alert.alert("Forgot Password", "Reset functionality coming soon.")
+          }
+        >
           <Text style={styles.forgotLink}>Forgot password?</Text>
         </TouchableOpacity>
 
