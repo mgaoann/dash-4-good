@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { MapPin, Package, Clock, Edit, Trash2 } from "lucide-react-native";
+import { COLORS } from "../styles/global";
 
 // TODO (Backend):
 //  - Fetch organization-specific pending requests from Firestore (filter by orgId)
@@ -30,7 +31,7 @@ export default function PendingRequests({ items = [], onEdit, onDelete }) {
 
       <View style={styles.details}>
         <View style={styles.detailRow}>
-          <MapPin size={16} color="#10B981" style={styles.icon} />
+          <MapPin size={16} color={COLORS.primary} style={styles.icon} />
           <Text style={styles.detail}>From: {item.pickup}</Text>
         </View>
         <View style={styles.detailRow}>

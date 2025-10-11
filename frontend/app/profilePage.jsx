@@ -15,6 +15,7 @@ import {
   TrendingUp,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import { COLORS } from "../styles/global";
 
 export default function ProfilePage({ userRole = "volunteer" }) {
   const router = useRouter();
@@ -154,7 +155,7 @@ export default function ProfilePage({ userRole = "volunteer" }) {
         </View>
 
         <Achievement
-          color="#22c55e"
+          color={COLORS.primary}
           title="First Delivery"
           subtitle="Completed your first delivery"
         />
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#22c55e",
+  backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   statItem: { alignItems: "center" },
-  statValue: { fontSize: 20, fontWeight: "bold", color: "#22c55e" },
+  statValue: { fontSize: 20, fontWeight: "bold", color: COLORS.primary },
   statLabel: { fontSize: 12, color: "gray" },
   achievement: {
     flexDirection: "row",
@@ -310,7 +311,7 @@ const styles = StyleSheet.create({
   },
   logoutText: { color: "#fff", fontWeight: "bold", marginLeft: 6 },
   editButton: {
-    backgroundColor: "#22c55e",
+  backgroundColor: COLORS.primary,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",

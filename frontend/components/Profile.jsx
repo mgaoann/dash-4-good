@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { User, Building2 } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import { COLORS } from "../styles/global";
 
 // target: "volunteer" | "organization"
 export default function Profile({ target = "volunteer", name = "User", imageUri = null }) {
@@ -51,17 +52,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6F9EE",
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#56eb92ff",
   },
   volAvatar: {
-    backgroundColor: "#22c55e",
+    backgroundColor: COLORS.primary,
   },
   orgAvatar: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: COLORS.primary,
   },
   avatarText: {
-    color: "#065f46",
+    color: "#fff",
     fontWeight: "700",
   },
   avatarImage: {

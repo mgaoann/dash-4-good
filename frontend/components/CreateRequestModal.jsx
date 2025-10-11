@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { X, MapPin, Package, Clock, DollarSign } from "lucide-react-native";
+import { COLORS } from "../styles/global";
 import Button from "./Button";
 
 // TODO (Backend): Save new request to Firestore
@@ -162,7 +163,7 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
             <Text style={styles.label}>Urgency Level</Text>
             <View style={styles.urgencyContainer}>
               {[
-                { key: "low", label: "Low", color: "#10B981" },
+                { key: "low", label: "Low", color: COLORS.primary },
                 { key: "normal", label: "Normal", color: "#F59E0B" },
                 { key: "high", label: "High", color: "#EF4444" },
               ].map((urgency) => (

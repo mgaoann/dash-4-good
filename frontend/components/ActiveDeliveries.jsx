@@ -6,6 +6,7 @@ import {
   FlatList,
 } from "react-native";
 import { MapPin, Package, Map, CheckCircle } from "lucide-react-native";
+import { COLORS } from "../styles/global";
 import { activeDeliveries } from "../data/dummyDeliveries";
 // TODO (Map/Geo): Hook up Google Maps API so "View Route" opens live map directions
 // between pickup and dropoff
@@ -29,7 +30,7 @@ export default function ActiveDeliveries() {
 
       <View style={styles.details}>
         <View style={styles.detailRow}>
-          <MapPin size={16} color="#10B981" style={styles.icon} />
+          <MapPin size={16} color={COLORS.primary} style={styles.icon} />
           <Text style={styles.detail}>From: {item.pickup}</Text>
         </View>
         <View style={styles.detailRow}>
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     marginBottom: 15,
     borderLeftWidth: 4,
-    borderLeftColor: "#3B82F6",
+  borderLeftColor: "#3B82F6",
   },
   headerRow: {
     flexDirection: "row",
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
   },
   completeButton: {
     flex: 1,
-    backgroundColor: "#10B981",
+  backgroundColor: COLORS.primary,
     padding: 10,
     borderRadius: 8,
     flexDirection: "row",

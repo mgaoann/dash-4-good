@@ -22,6 +22,7 @@ import {
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { orgInfo, orgCompletedDeliveries } from "../../data/dummyOrganization";
+import { COLORS } from "../../styles/global";
 
 export default function OrganizationProfile() {
   const router = useRouter();
@@ -186,7 +187,7 @@ export default function OrganizationProfile() {
         </View>
 
         <Achievement
-          color="#22c55e"
+          color={COLORS.primary}
           title="First Request"
           subtitle="Posted your first delivery request"
         />
@@ -235,7 +236,7 @@ export default function OrganizationProfile() {
             style={[styles.achievement, { backgroundColor: "#F3F4F6" }]}
           >
             <View
-              style={[styles.achievementIcon, { backgroundColor: "#10B981" }]}
+              style={[styles.achievementIcon, { backgroundColor: COLORS.primary }]}
             >
               <CheckCircle size={18} color="#fff" />
             </View>
@@ -400,7 +401,7 @@ const styles = StyleSheet.create({
   logoutText: { color: "#fff", fontWeight: "bold", marginLeft: 6 },
   editButton: {
     flexDirection: "row",
-    backgroundColor: "#22c55e",
+  backgroundColor: COLORS.primary,
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 8,

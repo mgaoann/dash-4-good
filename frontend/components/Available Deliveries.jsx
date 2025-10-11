@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { MapPin, Package, Car, Clock } from "lucide-react-native";
+import { COLORS } from "../styles/global";
 import { availableDeliveries } from "../data/dummyDeliveries";
 import Button from "./Button";
 // TODO (Backend): Replace dummy data (../data/dummyDeliveries) with Firestore "deliveries" collection
@@ -23,7 +24,7 @@ export default function AvailableDeliveries({ setSelectedRequest }) {
         {/* Details */}
         <View style={styles.details}>
           <View style={styles.detailRow}>
-            <MapPin size={16} color="#10B981" style={styles.icon} />
+            <MapPin size={16} color={COLORS.primary} style={styles.icon} />
             <Text style={styles.detail}>From: {item.pickup}</Text>
           </View>
           <View style={styles.detailRow}>
@@ -107,14 +108,14 @@ const styles = StyleSheet.create({
     color: "#1F2937",
   },
   badge: {
-    backgroundColor: "#DCFCE7",
+  backgroundColor: "#DCFCE7",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
   },
   badgeText: {
     fontSize: 12,
-    color: "#059669",
+  color: COLORS.primary,
     fontWeight: "500",
   },
   details: {

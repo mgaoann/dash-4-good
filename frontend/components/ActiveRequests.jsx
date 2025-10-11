@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { MapPin, Package, User, Clock, MessageCircle } from "lucide-react-native";
+import { COLORS } from "../styles/global";
 
 // TODO (Backend):
 //  - Fetch organization-specific active deliveries from Firestore (filter by orgId)
@@ -23,7 +24,7 @@ export default function ActiveRequests({ items = [] }) {
 
       <View style={styles.details}>
         <View style={styles.detailRow}>
-          <MapPin size={16} color="#10B981" style={styles.icon} />
+          <MapPin size={16} color={COLORS.primary} style={styles.icon} />
           <Text style={styles.detail}>From: {item.pickup}</Text>
         </View>
         <View style={styles.detailRow}>

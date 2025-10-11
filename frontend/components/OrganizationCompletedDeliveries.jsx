@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { MapPin, Package, User, Clock, Phone } from "lucide-react-native";
+import { COLORS } from "../styles/global";
 
 // TODO (Backend): Fetch organization's completed deliveries for the logged-in orgId
 //  - Include volunteer contact and completedAt timestamp
@@ -22,7 +23,7 @@ export default function OrganizationCompletedDeliveries({ items = [] }) {
       </View>
       <View style={styles.details}>
         <View style={styles.detailRow}>
-          <MapPin size={16} color="#10B981" style={styles.icon} />
+          <MapPin size={16} color={COLORS.primary} style={styles.icon} />
           <Text style={styles.detail}>From: {item.pickup}</Text>
         </View>
         <View style={styles.detailRow}>
@@ -77,12 +78,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     marginBottom: 15,
     borderLeftWidth: 4,
-    borderLeftColor: "#10B981",
+  borderLeftColor: COLORS.primary,
   },
   headerRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 8 },
   title: { fontWeight: "600", fontSize: 15, color: "#1F2937" },
   badge: { backgroundColor: "#D1FAE5", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 },
-  badgeText: { fontSize: 12, color: "#065F46" },
+  badgeText: { fontSize: 12, color: COLORS.primary },
   details: { marginBottom: 12 },
   detailRow: { flexDirection: "row", alignItems: "center", marginBottom: 6 },
   icon: { marginRight: 6 },
