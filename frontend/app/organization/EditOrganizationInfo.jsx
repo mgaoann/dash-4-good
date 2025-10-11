@@ -33,11 +33,32 @@ export default function EditOrganizationInfo() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Edit Organization Info</Text>
-      <TextInput style={styles.input} placeholder="Organization name" placeholderTextColor="#6B7280" value={form.name} onChangeText={(v) => update("name", v)} />
-      <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#6B7280" value={form.email} onChangeText={(v) => update("email", v)} autoCapitalize="none" />
-      <TextInput style={styles.input} placeholder="Phone" placeholderTextColor="#6B7280" value={form.phone} onChangeText={(v) => update("phone", v)} />
-      <TextInput style={styles.input} placeholder="Website" placeholderTextColor="#6B7280" value={form.website} onChangeText={(v) => update("website", v)} autoCapitalize="none" />
-      <TextInput style={[styles.input, styles.textArea]} placeholder="Description" placeholderTextColor="#6B7280" value={form.description} onChangeText={(v) => update("description", v)} multiline numberOfLines={3} />
+
+      <View style={styles.field}>
+        <Text style={styles.label}>Organization Name <Text style={{ color: '#dc2626' }}>*</Text></Text>
+        <TextInput style={styles.input} placeholder="Organization Name" placeholderTextColor="#6B7280" value={form.name} onChangeText={(v) => update("name", v)} />
+      </View>
+
+      <View style={styles.field}>
+        <Text style={styles.label}>Email <Text style={{ color: '#dc2626' }}>*</Text></Text>
+        <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#6B7280" value={form.email} onChangeText={(v) => update("email", v)} autoCapitalize="none" />
+      </View>
+
+      <View style={styles.field}>
+        <Text style={styles.label}>Phone</Text>
+        <TextInput style={styles.input} placeholder="Phone" placeholderTextColor="#6B7280" value={form.phone} onChangeText={(v) => update("phone", v)} />
+      </View>
+
+      <View style={styles.field}>
+        <Text style={styles.label}>Website</Text>
+        <TextInput style={styles.input} placeholder="Website" placeholderTextColor="#6B7280" value={form.website} onChangeText={(v) => update("website", v)} autoCapitalize="none" />
+      </View>
+
+      <View style={styles.field}>
+        <Text style={styles.label}>Short description</Text>
+        <TextInput style={[styles.input, styles.textArea]} placeholder="A short description about your organization" placeholderTextColor="#6B7280" value={form.description} onChangeText={(v) => update("description", v)} multiline numberOfLines={3} />
+      </View>
+
       <Button title="Save" onPress={onSave} style={{ marginTop: 12 }} />
     </ScrollView>
   );

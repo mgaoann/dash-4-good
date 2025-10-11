@@ -44,7 +44,7 @@ export default function SignupVolunteer() {
       {/* First Name & Last Name */}
       <View style={[styles.row, isSmallScreen && styles.column]}>
         <View style={styles.field}>
-          <Text style={styles.label}>First Name *</Text>
+          <Text style={styles.label}>First Name <Text style={{ color: '#dc2626' }}>*</Text></Text>
           <TextInput
             style={styles.input}
             placeholder="Your First Name"
@@ -55,7 +55,7 @@ export default function SignupVolunteer() {
         </View>
 
         <View style={[styles.field, !isSmallScreen && { marginLeft: 12 }]}>
-          <Text style={styles.label}>Last Name *</Text>
+          <Text style={styles.label}>Last Name <Text style={{ color: '#dc2626' }}>*</Text></Text>
           <TextInput
             style={styles.input}
             placeholder="Your Last Name"
@@ -68,7 +68,7 @@ export default function SignupVolunteer() {
 
       {/* Email */}
       <View style={styles.field}>
-        <Text style={styles.label}>Email *</Text>
+        <Text style={styles.label}>Email <Text style={{ color: '#dc2626' }}>*</Text></Text>
         <TextInput
           style={styles.input}
           placeholder="Your Email"
@@ -93,7 +93,7 @@ export default function SignupVolunteer() {
 
       {/* Password */}
       <View style={styles.field}>
-        <Text style={styles.label}>Password *</Text>
+        <Text style={styles.label}>Password <Text style={{ color: '#dc2626' }}>*</Text></Text>
         <TextInput
           style={styles.input}
           placeholder="Your Password"

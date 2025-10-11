@@ -17,6 +17,7 @@ import {
   Users,
   Package,
   CheckCircle,
+  Edit,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -71,6 +72,34 @@ export default function OrganizationProfile() {
           </View>
         </View>
 
+        {/* About */}
+        <View style={[styles.infoRow, { alignItems: "flex-start" }]}> 
+          <Text
+            style={[
+              styles.infoText,
+              { marginLeft: 0, color: "#374151", fontWeight: "600" },
+            ]}
+          >
+            About
+          </Text>
+        </View>
+        {editing ? (
+          <TextInput
+            style={[styles.infoText, styles.textArea]}
+            multiline
+            numberOfLines={3}
+            value={org.description}
+            onChangeText={(v) => setOrg({ ...org, description: v })}
+          />
+        ) : (
+          <Text style={[styles.infoText, { color: "#374151" }]}> 
+            {org.description}
+          </Text>
+        )}
+
+        {/* Add spacing between About and contact section */}
+        <View style={{ height: 14 }} />
+
         {/* Contact details - editable */}
         <View style={styles.infoRow}>
           <Mail size={18} color="gray" />
@@ -108,36 +137,13 @@ export default function OrganizationProfile() {
             <Text style={styles.infoText}>{org.website}</Text>
           )}
         </View>
-        <View style={[styles.infoRow, { alignItems: "flex-start" }]}>
-          <Text
-            style={[
-              styles.infoText,
-              { marginLeft: 0, color: "#374151", fontWeight: "600" },
-            ]}
-          >
-            About
-          </Text>
-        </View>
-        {editing ? (
-          <TextInput
-            style={[styles.infoText, styles.textArea]}
-            multiline
-            numberOfLines={3}
-            value={org.description}
-            onChangeText={(v) => setOrg({ ...org, description: v })}
-          />
-        ) : (
-          <Text style={[styles.infoText, { color: "#374151" }]}>
-            {org.description}
-          </Text>
-        )}
+        {/* Primary Edit Profile button placed under contact details */}
         <TouchableOpacity
-          style={[styles.settingButton, { marginTop: 10 }]}
-          onPress={() => setEditing(!editing)}
+          style={styles.editButton}
+          onPress={() => router.push("/organization/EditOrganizationInfo")}
         >
-          <Text style={styles.settingText}>
-            {editing ? "Save" : "Edit Profile"}
-          </Text>
+          <Edit size={16} color="#fff" />
+          <Text style={[styles.editButtonText, { marginLeft: 8 }]}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
 
@@ -208,12 +214,7 @@ export default function OrganizationProfile() {
           <Text style={styles.sectionTitle}>Organization Settings</Text>
         </View>
 
-        <TouchableOpacity
-          style={styles.settingButton}
-          onPress={() => router.push("/organization/EditOrganizationInfo")}
-        >
-          <Text style={styles.settingText}>Edit Organization Info</Text>
-        </TouchableOpacity>
+        {/* Removed duplicate Edit Organization Info setting; primary edit action is above. */}
         <TouchableOpacity style={styles.settingButton}>
           <Text style={styles.settingText}>Notification Preferences</Text>
         </TouchableOpacity>
@@ -397,4 +398,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logoutText: { color: "#fff", fontWeight: "bold", marginLeft: 6 },
+  editButton: {
+    flexDirection: "row",
+    backgroundColor: "#22c55e",
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 8,
+  },
+  editButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
 });

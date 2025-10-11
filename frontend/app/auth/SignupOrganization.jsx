@@ -47,7 +47,7 @@ export default function SignupOrganization() {
 
       {/* Organization Name */}
       <View style={styles.field}>
-        <Text style={styles.label}>Organization Name *</Text>
+        <Text style={styles.label}>Organization Name <Text style={{ color: '#dc2626' }}>*</Text></Text>
         <TextInput
           style={styles.input}
           placeholder="Organization name"
@@ -59,7 +59,7 @@ export default function SignupOrganization() {
 
       {/* Email */}
       <View style={styles.field}>
-        <Text style={styles.label}>Email *</Text>
+        <Text style={styles.label}>Email <Text style={{ color: '#dc2626' }}>*</Text></Text>
         <TextInput
           style={styles.input}
           placeholder="Your Email"
@@ -111,7 +111,7 @@ export default function SignupOrganization() {
 
       {/* Password */}
       <View style={styles.field}>
-        <Text style={styles.label}>Password *</Text>
+        <Text style={styles.label}>Password <Text style={{ color: '#dc2626' }}>*</Text></Text>
         <TextInput
           style={styles.input}
           placeholder="Your Password"
