@@ -3,6 +3,8 @@ import Profile from "../../components/Profile";
 import StatRow from "../../components/StatRow";
 
 import { useState } from "react";
+import { activeDeliveries, availableDeliveries } from "../../data/dummyDeliveries";
+import { orgCompletedDeliveries } from "../../data/dummyOrganization";
 import ActiveDeliveries from "../../components/ActiveDeliveries";
 import AvailableDeliveries from "../../components/Available Deliveries";
 // TODO (Backend): Replace dummy state with live data from Firestore
@@ -14,10 +16,11 @@ import AvailableDeliveries from "../../components/Available Deliveries";
 //  - Example: notify volunteer when a new delivery request nearby is posted
 
 export default function VolunteerDashboard() {
-  // Dummy data for now
-  const [available, setAvailable] = useState(2);
-  const [inProgress, setInProgress] = useState(1);
-  const [completed, setCompleted] = useState(0);
+  // Dummy data for now (derived from data files)
+  const [available, setAvailable] = useState(availableDeliveries.length);
+  const [inProgress, setInProgress] = useState(activeDeliveries.length);
+  // completed deliveries for this volunteer set to number of org completed items as an example
+  const [completed, setCompleted] = useState(orgCompletedDeliveries.length);
   return (
     <ScrollView>
       <View style={styles.container}>

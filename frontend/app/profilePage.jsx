@@ -75,7 +75,7 @@ export default function ProfilePage({ userRole = "volunteer" }) {
           <View>
             <Text style={styles.name}>
               {userRole === "organization"
-                ? "Green Valley Grocers"
+                ? "Green Valley Food Bank"
                 : "Sarah Johnson"}
             </Text>
             <Text style={styles.role}>{userRole}</Text>

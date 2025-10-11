@@ -49,8 +49,8 @@ export default function OrganizationProfile() {
     // TODO (Backend): derive from Firestore aggregates for this orgId
     totalRequests: orgCompletedDeliveries.length + 2,
     completedDeliveries: orgCompletedDeliveries.length,
-    mealsDelivered: 720,
-    volunteersHelped: 12,
+    mealsDelivered: 1200,
+    volunteersHelped: 25,
   };
 
   return (
