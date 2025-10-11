@@ -58,8 +58,9 @@ export default function OrganizationProfile() {
       style={styles.container}
       contentContainerStyle={{ paddingBottom: 30 }}
     >
-      <View style={styles.headerText}>
-        <Text>Manage your organization profile</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Organization Profile</Text>
+        <Text style={styles.headerSubtitle}>Manage your account</Text>
       </View>
 
       <View style={styles.card}>
@@ -74,7 +75,7 @@ export default function OrganizationProfile() {
         </View>
 
         {/* About */}
-        <View style={[styles.infoRow, { alignItems: "flex-start" }]}> 
+        <View style={[styles.infoRow, { alignItems: "flex-start" }]}>
           <Text
             style={[
               styles.infoText,
@@ -93,7 +94,7 @@ export default function OrganizationProfile() {
             onChangeText={(v) => setOrg({ ...org, description: v })}
           />
         ) : (
-          <Text style={[styles.infoText, { color: "#374151" }]}> 
+          <Text style={[styles.infoText, { color: "#374151" }]}>
             {org.description}
           </Text>
         )}
@@ -144,7 +145,9 @@ export default function OrganizationProfile() {
           onPress={() => router.push("/organization/EditOrganizationInfo")}
         >
           <Edit size={16} color="#fff" />
-          <Text style={[styles.editButtonText, { marginLeft: 8 }]}>Edit Profile</Text>
+          <Text style={[styles.editButtonText, { marginLeft: 8 }]}>
+            Edit Profile
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -236,7 +239,10 @@ export default function OrganizationProfile() {
             style={[styles.achievement, { backgroundColor: "#F3F4F6" }]}
           >
             <View
-              style={[styles.achievementIcon, { backgroundColor: COLORS.primary }]}
+              style={[
+                styles.achievementIcon,
+                { backgroundColor: COLORS.primary },
+              ]}
             >
               <CheckCircle size={18} color="#fff" />
             </View>
@@ -303,8 +309,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
-  headerText: {
-    marginVertical: 10,
+  header: {
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#1F2937",
   },
   card: {
     backgroundColor: "#fff",
@@ -401,7 +413,7 @@ const styles = StyleSheet.create({
   logoutText: { color: "#fff", fontWeight: "bold", marginLeft: 6 },
   editButton: {
     flexDirection: "row",
-  backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.primary,
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 8,
