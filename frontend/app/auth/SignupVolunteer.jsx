@@ -117,7 +117,9 @@ export default function SignupVolunteer() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
+  container: {
+    padding: 20
+  },
   title: {
     fontSize: 25,
     fontWeight: "700",
@@ -149,7 +151,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1F2937",
   },
-  altRow: { flexDirection: "row", justifyContent: "center", marginTop: 16 },
-  altText: { color: "#6B7280", fontSize: 14 },
-  altLink: { color: "#4CAF50", fontSize: 14, fontWeight: "600" },
+  altRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 16
+  },
+  altText: {
+    color: "#6B7280",
+    fontSize: 14
+  },
+  altLink: {
+    color: "#4CAF50",
+    fontSize: 14,
+    fontWeight: "600"
+  },
 });

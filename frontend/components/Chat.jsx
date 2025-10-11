@@ -151,41 +151,166 @@ export default function Chat({ conversations = [], me = 'vol', role = 'volunteer
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  // Full screen list
-  listPaneFull: { flex: 1, backgroundColor: '#F7F7F7' },
-  listHeaderFull: { padding: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#eee' },
-  convItem: { flexDirection: 'row', alignItems: 'center', padding: 12 },
-  avatar: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', marginRight: 12 },
-  convText: { flex: 1 },
-  convTitle: { fontWeight: '600', marginBottom: 2 },
-  convSnippet: { color: '#666' },
-  convMeta: { alignItems: 'flex-end' },
-  convTime: { color: '#999', fontSize: 12 },
-  unreadBadge: { backgroundColor: COLORS.primary, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 12, marginTop: 6 },
-  unreadText: { color: '#fff', fontSize: 12 },
-  emptyChat: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  emptyText: { color: '#777' },
-  // Full screen chat
-  chatPaneFull: { flex: 1, backgroundColor: '#fff' },
-  chatPaneHidden: { width: 0, height: 0 },
-  chatInnerFull: { flex: 1 },
-  chatHeaderFull: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#eee', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-  chatHeaderTitleFull: { fontWeight: '700', fontSize: 18, textAlign: 'center' },
-  bubbleRow: { marginVertical: 8, flexDirection: 'row', paddingHorizontal: 12 },
-  bubbleRowLeft: { justifyContent: 'flex-start' },
-  bubbleRowRight: { justifyContent: 'flex-end' },
-  bubble: { maxWidth: '75%', padding: 14, borderRadius: 12 },
-  bubbleMe: { backgroundColor: COLORS.primary },
-  // increase contrast for other-person bubble
-  bubbleThem: { backgroundColor: '#e6f4ea' },
-  bubbleTextMe: { color: '#fff' },
-  bubbleTextThem: { color: '#0b2f16' },
-  bubbleTime: { fontSize: 10, color: '#666', marginTop: 6 },
-  inputRow: { flexDirection: 'row', padding: 12, borderTopWidth: 1, borderTopColor: '#eee' },
-  input: { flex: 1, borderWidth: 1, borderColor: '#e0e0e0', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8, marginRight: 8 },
-  sendBtn: { backgroundColor: COLORS.primary, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
-  sendText: { color: '#fff', fontWeight: '600' },
-  listTitle: { fontWeight: '700', fontSize: 16 },
-  iconButton: { backgroundColor: COLORS.primary, padding: 8, borderRadius: 8, marginLeft: 8 }
+    container: {
+        flex: 1, 
+        backgroundColor: '#fff'
+    },
+    // Full screen list
+    listPaneFull: {
+        flex: 1,
+        backgroundColor: '#F7F7F7'
+    },
+    listHeaderFull: {
+        padding: 12,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee'
+    },
+    convItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 12
+    },
+    avatar: {
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 12
+    },
+    convText: {
+        flex: 1
+    },
+    convTitle: {
+        fontWeight: '600',
+        marginBottom: 2
+    },
+    convSnippet: {
+        color: '#666'
+    },
+    convMeta: {
+        alignItems: 'flex-end'
+    },
+    convTime: {
+        color: '#999',
+        fontSize: 12
+    },
+    unreadBadge: {
+        backgroundColor: COLORS.primary,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        borderRadius: 12,
+        marginTop: 6
+    },
+    unreadText: {
+        color: '#fff',
+        fontSize: 12
+    },
+    emptyChat: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    emptyText: {
+        color: '#777'
+    },
+    // Full screen chat
+    chatPaneFull: {
+        flex: 1,
+        backgroundColor: '#fff'
+    },
+    chatPaneHidden: {
+        width: 0,
+        height: 0
+    },
+    chatInnerFull: {
+        flex: 1
+    },
+    chatHeaderFull: {
+        padding: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    chatHeaderTitleFull: {
+        fontWeight: '700',
+        fontSize: 18,
+        textAlign: 'center'
+    },
+    bubbleRow: {
+        marginVertical: 8,
+        flexDirection: 'row',
+        paddingHorizontal: 12
+    },
+    bubbleRowLeft: {
+        justifyContent: 'flex-start'
+    },
+    bubbleRowRight: {
+        justifyContent: 'flex-end'
+    },
+    bubble: {
+        maxWidth: '75%',
+        padding: 14,
+        borderRadius: 12
+    },
+    bubbleMe: {
+        backgroundColor: COLORS.primary
+    },
+    // increase contrast for other-person bubble
+    bubbleThem: {
+        backgroundColor: '#e6f4ea'
+    },
+    bubbleTextMe: {
+        color: '#fff'
+    },
+    bubbleTextThem: {
+        color: '#0b2f16'
+    },
+    bubbleTime: {
+        fontSize: 10,
+        color: '#666',
+        marginTop: 6
+    },
+    inputRow: {
+        flexDirection: 'row',
+        padding: 12,
+        borderTopWidth: 1,
+        borderTopColor: '#eee'
+    },
+    input: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: '#e0e0e0',
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        marginRight: 8
+    },
+    sendBtn: {
+        backgroundColor: COLORS.primary,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    sendText: {
+        color: '#fff',
+        fontWeight: '600'
+    },
+    listTitle: {
+        fontWeight: '700',
+        fontSize: 16
+    },
+    iconButton: {
+        backgroundColor: COLORS.primary,
+        padding: 8,
+        borderRadius: 8,
+        marginLeft: 8
+    }
 });

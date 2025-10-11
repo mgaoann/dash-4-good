@@ -65,8 +65,16 @@ export default function EditOrganizationInfo() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
-  title: { fontSize: 20, fontWeight: "700", color: "#1F2937", marginBottom: 16, textAlign: "center" },
+  container: {
+    padding: 20
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#1F2937",
+    marginBottom: 16,
+    textAlign: "center"
+  },
   input: {
     backgroundColor: "#fff",
     borderWidth: 1,
@@ -77,7 +85,10 @@ const styles = StyleSheet.create({
     color: "#1F2937",
     marginBottom: 12,
   },
-  textArea: { height: 100, textAlignVertical: "top" },
+  textArea: {
+    height: 100,
+    textAlignVertical: "top"
+  },
 });
 
 

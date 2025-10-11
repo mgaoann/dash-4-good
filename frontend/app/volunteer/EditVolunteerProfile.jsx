@@ -65,7 +65,9 @@ export default function EditVolunteerProfile() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
+  container: {
+    padding: 20
+  },
   title: {
     fontSize: 20,
     fontWeight: "700",

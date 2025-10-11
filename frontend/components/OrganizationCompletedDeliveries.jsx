@@ -67,8 +67,15 @@ export default function OrganizationCompletedDeliveries({ items = [] }) {
 }
 
 const styles = StyleSheet.create({
-  section: { marginTop: 9 },
-  sectionTitle: { fontSize: 16, fontWeight: "bold", color: "#1F2937", marginBottom: 10 },
+  section: {
+    marginTop: 9
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1F2937",
+    marginBottom: 10
+  },
   card: {
     backgroundColor: "#fff",
     padding: 16,
@@ -80,15 +87,44 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
   borderLeftColor: COLORS.primary,
   },
-  headerRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 8 },
-  title: { fontWeight: "600", fontSize: 15, color: "#1F2937" },
-  badge: { backgroundColor: "#D1FAE5", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 },
-  badgeText: { fontSize: 12, color: COLORS.primary },
-  details: { marginBottom: 12 },
-  detailRow: { flexDirection: "row", alignItems: "center", marginBottom: 6 },
-  icon: { marginRight: 6 },
-  detail: { fontSize: 13, color: "#4B5563" },
-  actions: { flexDirection: "row" },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8
+  },
+  title: {
+    fontWeight: "600",
+    fontSize: 15,
+    color: "#1F2937"
+  },
+  badge: {
+    backgroundColor: "#D1FAE5",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12
+  },
+  badgeText: {
+    fontSize: 12, 
+    color: COLORS.primary 
+  },
+  details: { 
+    marginBottom: 12 
+  },
+  detailRow: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    marginBottom: 6 
+  },
+  icon: { 
+    marginRight: 6 
+  },
+  detail: { 
+    fontSize: 13, 
+    color: "#4B5563" 
+  },
+  actions: { 
+    flexDirection: "row" 
+  },
   outlineButton: {
     flex: 1,
     borderWidth: 1,
@@ -99,7 +135,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  outlineText: { fontSize: 13, color: "#374151", marginLeft: 4 },
+  outlineText: { 
+    fontSize: 13, 
+    color: "#374151", 
+    marginLeft: 4 
+  },
 });
 
 

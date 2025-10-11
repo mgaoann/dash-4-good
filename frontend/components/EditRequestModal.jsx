@@ -99,22 +99,95 @@ export default function EditRequestModal({ visible, onClose, request, onSave }) 
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F9FAFB" },
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 20, backgroundColor: "#fff", borderBottomWidth: 1, borderBottomColor: "#E5E7EB" },
-  title: { fontSize: 18, fontWeight: "600", color: "#1F2937" },
-  closeButton: { padding: 4 },
-  content: { flex: 1, padding: 20 },
-  inputGroup: { marginBottom: 20 },
-  label: { fontSize: 14, fontWeight: "500", color: "#374151", marginBottom: 8 },
-  input: { backgroundColor: "#fff", borderWidth: 1, borderColor: "#D1D5DB", borderRadius: 8, padding: 12, fontSize: 16, color: "#1F2937" },
-  inputWithIcon: { flexDirection: "row", alignItems: "center", backgroundColor: "#fff", borderWidth: 1, borderColor: "#D1D5DB", borderRadius: 8, paddingHorizontal: 12 },
-  inputIcon: { marginRight: 8 },
-  inputWithIconText: { flex: 1, borderWidth: 0, padding: 12, paddingLeft: 0 },
-  textArea: { height: 80, textAlignVertical: "top" },
-  footer: { flexDirection: "row", padding: 20, backgroundColor: "#fff", borderTopWidth: 1, borderTopColor: "#E5E7EB", gap: 12 },
-  cancelButton: { flex: 1, padding: 12, borderWidth: 1, borderColor: "#D1D5DB", borderRadius: 8, alignItems: "center" },
-  cancelText: { fontSize: 16, fontWeight: "500", color: "#6B7280" },
-  submitButton: { flex: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: "#F9FAFB"
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E7EB"
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#1F2937"
+  },
+  closeButton: {
+    padding: 4
+  },
+  content: {
+    flex: 1,
+    padding: 20
+  },
+  inputGroup: {
+    marginBottom: 20
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#374151",
+    marginBottom: 8
+  },
+  input: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#D1D5DB",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: "#1F2937"
+  },
+  inputWithIcon: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#D1D5DB",
+    borderRadius: 8,
+    paddingHorizontal: 12
+  },
+  inputIcon: {
+    marginRight: 8
+  },
+  inputWithIconText: {
+    flex: 1,
+    borderWidth: 0,
+    padding: 12,
+    paddingLeft: 0
+  },
+  textArea: {
+    height: 80,
+    textAlignVertical: "top"
+  },
+  footer: {
+    flexDirection: "row",
+    padding: 20,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#E5E7EB",
+    gap: 12
+  },
+  cancelButton: {
+    flex: 1,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#D1D5DB",
+    borderRadius: 8,
+    alignItems: "center"
+  },
+  cancelText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#6B7280"
+  },
+  submitButton: {
+    flex: 1
+  },
 });
 
 

@@ -152,7 +152,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: "center",
   },
-  field: { width: "100%", marginBottom: 12 },
+  field: {
+    width: "100%",
+    marginBottom: 12
+  },
   label: {
     fontSize: 14,
     fontWeight: "600",
@@ -168,9 +171,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1F2937",
   },
-  textArea: { height: 100, textAlignVertical: "top" },
-  buttonWrapper: { width: "100%", marginTop: 12 },
-  altRow: { flexDirection: "row", justifyContent: "center", marginTop: 16 },
-  altText: { color: "#6B7280", fontSize: 14 },
-  altLink: { color: "#4CAF50", fontSize: 14, fontWeight: "600" },
+  textArea: {
+    height: 100,
+    textAlignVertical: "top"
+  },
+  buttonWrapper: {
+    width: "100%",
+    marginTop: 12
+  },
+  altRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 16
+  },
+  altText: {
+    color: "#6B7280",
+    fontSize: 14
+  },
+  altLink: {
+    color: "#4CAF50",
+    fontSize: 14,
+    fontWeight: "600"
+  },
 });

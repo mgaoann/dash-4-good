@@ -251,29 +251,55 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-  backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
   },
-  name: { fontSize: 18, fontWeight: "600" },
-  role: { color: "gray", textTransform: "capitalize" },
-  infoRow: { flexDirection: "row", alignItems: "center", marginVertical: 4 },
-  infoText: { marginLeft: 8, color: "gray" },
+  name: {
+    fontSize: 18,
+    fontWeight: "600"
+  },
+  role: {
+    color: "gray",
+    textTransform: "capitalize"
+  },
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 4
+  },
+  infoText: {
+    marginLeft: 8,
+    color: "gray"
+  },
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 8,
   },
-  sectionTitle: { fontSize: 16, fontWeight: "600", marginLeft: 6 },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginLeft: 6
+  },
   statsGrid: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginTop: 8,
   },
-  statItem: { alignItems: "center" },
-  statValue: { fontSize: 20, fontWeight: "bold", color: COLORS.primary },
-  statLabel: { fontSize: 12, color: "gray" },
+  statItem: {
+    alignItems: "center"
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: COLORS.primary
+  },
+  statLabel: {
+    fontSize: 12,
+    color: "gray"
+  },
   achievement: {
     flexDirection: "row",
     alignItems: "center",
@@ -289,8 +315,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginRight: 10,
   },
-  achievementTitle: { fontWeight: "600" },
-  achievementSubtitle: { fontSize: 12, color: "gray" },
+  achievementTitle: {
+    fontWeight: "600"
+  },
+  achievementSubtitle: {
+    fontSize: 12,
+    color: "gray"
+  },
   settingButton: {
     paddingVertical: 12,
     paddingHorizontal: 8,
@@ -309,7 +340,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  logoutText: { color: "#fff", fontWeight: "bold", marginLeft: 6 },
+  logoutText: {
+    color: "#fff",
+    fontWeight: "bold",
+    marginLeft: 6
+  },
   editButton: {
   backgroundColor: COLORS.primary,
     paddingVertical: 12,
