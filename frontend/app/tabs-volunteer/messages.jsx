@@ -1,9 +1,13 @@
 import { View, Text } from "react-native";
 
-export default function MessagesTab() {
+import React from 'react';
+import Chat from '../../components/Chat';
+import { volunteerConversations } from '../../data/dummyMessages';
+
+export default function Messages() {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Messages (Chat / Updates)</Text>
+    <View style={{ flex: 1 }}>
+      <Chat conversations={volunteerConversations} me={'vol'} role={'volunteer'} />
     </View>
   );
 }
