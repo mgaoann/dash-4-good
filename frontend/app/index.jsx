@@ -10,7 +10,6 @@ import HeartCircle from "../components/HeartCircle";
 import CardList from "../components/CardList";
 import Button from "../components/Button";
 import { useRouter } from "expo-router";
-import { registerForPushNotificationsAsync } from "./notifications";
 import { db } from "./firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
