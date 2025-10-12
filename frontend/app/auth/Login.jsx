@@ -9,28 +9,44 @@ import {
 import Button from "../../components/Button";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-
-// TODO (Backend Auth):
-//  - Replace mock login with Firebase Auth (email/password)
-//  - On success, fetch user role (volunteer|organization) from Firestore
-//  - Route to respective dashboard based on role
-//  - Handle error states and validation
+import { auth, db } from "../firebase"; // Firebase setup
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onLogin = () => {
+  const onLogin = async () => {
     if (!email || !password) {
       Alert.alert("Missing info", "Enter email and password.");
       return;
     }
-    // MOCK: Send everyone to volunteer by default; if email contains "org", send to organization
-    if (email.toLowerCase().includes("org")) {
-      router.replace("/tabs-organization/home");
-    } else {
-      router.replace("/tabs-volunteer/home");
+
+    try {
+      // Sign in with Firebase
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const uid = userCredential.user.uid;
+
+      // Get user role from Firestore
+      const userDoc = await getDoc(doc(db, "users", uid));
+      if (!userDoc.exists()) {
+        Alert.alert("Login Error", "User data not found.");
+        return;
+      }
+
+      const userData = userDoc.data();
+
+      // Navigate based on role
+      if (userData.role === "organization") {
+        router.replace("/tabs-organization/home");
+      } else {
+        router.replace("/tabs-volunteer/home");
+      }
+
+    } catch (error) {
+      Alert.alert("Login Error", error.message);
     }
   };
 
@@ -85,7 +101,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 100, // push down from top instead of center
+    paddingTop: 100,
     backgroundColor: "#F9FAFB",
   },
   title: {

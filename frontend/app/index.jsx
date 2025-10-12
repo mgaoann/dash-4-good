@@ -10,6 +10,10 @@ import HeartCircle from "../components/HeartCircle";
 import CardList from "../components/CardList";
 import Button from "../components/Button";
 import { useRouter } from "expo-router";
+import { registerForPushNotificationsAsync } from "./notifications";
+import { db } from "./firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 export default function Index() {
   const router = useRouter();
@@ -32,17 +36,21 @@ export default function Index() {
 
       <CardList />
 
-      <View style={styles.buttonStyle}>
-        <Button
-          title={"Get Started"}
-          onPress={handleGetStarted}
-          textStyle={{
-            color: "#fff",
-            fontWeight: "600",
-            fontSize: 15,
-          }}
-        />
-      </View>
+
+      {/* Buttons for role selection */}
+      <View style={styles.buttonContainer}>
+  <Button
+    title="Sign Up as Volunteer"
+    onPress={() => router.push("/auth/SignupVolunteer")}
+    textStyle={{ color: "#fff", fontWeight: "600", fontSize: 15 }}
+    style={{ marginBottom: 12 }}
+  />
+  <Button
+    title="Sign Up as Organization"
+    onPress={() => router.push("/auth/SignupOrganization")}
+    textStyle={{ color: "#fff", fontWeight: "600", fontSize: 15 }}
+  />
+</View>
 
       {/* Auth link for existing users */}
       <View style={styles.loginRow}>
@@ -96,4 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
+  buttonContainer: {
+  marginTop: 20,
+  marginBottom: 20,
+  width: "100%",
+  paddingHorizontal: 20,
+}
+
 });
