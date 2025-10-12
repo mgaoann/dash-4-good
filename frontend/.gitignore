@@ -12,10 +12,7 @@ node_modules
 # Ignore node modules
 node_modules/
 
-# Ignore personal Firebase config
-firebase.jsonfig.js
-firebase-debug.log
-firebase.js
+
 # Expo
 .expo/
 dist/
