@@ -14,6 +14,7 @@ import { auth, db } from "../firebase"; // Firebase setup
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
+// Signup form for organizations
 export default function SignupOrganization() {
   const router = useRouter();
   const [form, setForm] = useState({
