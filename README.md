@@ -28,9 +28,45 @@ Our hackathon focus was to design and build a functional frontend MVP that demon
 
 
 ## Contributors
-- Ayesha Dawodi – Suggested MVP features and task priorities; implemented Volunteer Dashboard page, Welcome page, and Profile Settings page.
+- Ayesha Dawodi – Designed and built the main UI for Dash 4 Good, including the **Volunteer Dashboard**, **Profile screens**, and **Landing Page**, using React Native. Focused on creating a clean, intuitive, and responsive user experience with smooth navigation across tabs. Also implemented the **tab navigation system** and set up the **map feature’s flow and screen integration** ahead of the final map implementation.
 - Maggie Gao - Implemented Organization Dashboard page, Organization Profile page, Sign Up/Log In pages, misc. bug fixes.
 
 ## Mission
 
 Inspired by the UN Sustainable Development Goals (SDG 1: No Poverty & SDG 2: Zero Hunger), Dash 4 Good aims to make food access more equitable, one delivery at a time.
+
+## How to Run the App
+
+### Prerequisites
+Make sure you have these installed before running the project:
+- [Node.js](https://nodejs.org/) **v18+**
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+
+### Clone the Repository
+```bash
+git clone https://github.com/mgaoann/dash-4-good.git
+cd frontend
+```
+
+### Install Dependencies
+
+npm install
+
+## Run the App
+
+Start the development server:
+
+- npx expo start
+
+## Then choose one of the following:
+
+- Press w → open in your web browser
+
+- Press a → open on an Android emulator
+
+- Press i → open on an iOS simulator (Mac only)
+
+- Or scan the QR code in the Expo Go app on your phone
+
+
+
