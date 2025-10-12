@@ -6,7 +6,6 @@ import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
-// Signup form for volunteers
 export default function SignupVolunteer() {
   const router = useRouter();
   const [form, setForm] = useState({
