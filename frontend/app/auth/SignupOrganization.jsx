@@ -10,11 +10,12 @@ import {
 import Button from "../../components/Button";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { auth, db } from "../firebase"; // Firebase setup
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
-// Signup form for organizations
+// TODO (Backend Auth):
+//  - Create organization user with role = "organization"
+//  - Store org profile (name, email, phone, website, description)
+//  - On success, route to OrganizationDashboard
+
 export default function SignupOrganization() {
   const router = useRouter();
   const [form, setForm] = useState({
@@ -28,7 +29,7 @@ export default function SignupOrganization() {
 
   const update = (k, v) => setForm({ ...form, [k]: v });
 
-  const onSignup = async () => {
+  const onSignup = () => {
     if (!form.orgName || !form.email || !form.password) {
       Alert.alert(
         "Missing info",
@@ -36,32 +37,8 @@ export default function SignupOrganization() {
       );
       return;
     }
-
-    try {
-      // Create Firebase Auth user
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        form.email,
-        form.password
-      );
-      const uid = userCredential.user.uid;
-
-      // Save user data in Firestore
-      await setDoc(doc(db, "users", uid), {
-        role: "organization",
-        orgName: form.orgName,
-        email: form.email,
-        phone: form.phone || "",
-        website: form.website || "",
-        description: form.description || "",
-        createdAt: serverTimestamp(),
-      });
-
-      // Navigate to organization dashboard
-      router.replace("/tabs-organization/home");
-    } catch (error) {
-      Alert.alert("Signup Error", error.message);
-    }
+    // Need to properly implement creation
+    router.replace("/tabs-organization/home");
   };
 
   return (
@@ -70,9 +47,7 @@ export default function SignupOrganization() {
 
       {/* Organization Name */}
       <View style={styles.field}>
-        <Text style={styles.label}>
-          Organization Name <Text style={{ color: "#dc2626" }}>*</Text>
-        </Text>
+        <Text style={styles.label}>Organization Name <Text style={{ color: '#dc2626' }}>*</Text></Text>
         <TextInput
           style={styles.input}
           placeholder="Organization name"
@@ -84,9 +59,7 @@ export default function SignupOrganization() {
 
       {/* Email */}
       <View style={styles.field}>
-        <Text style={styles.label}>
-          Email <Text style={{ color: "#dc2626" }}>*</Text>
-        </Text>
+        <Text style={styles.label}>Email <Text style={{ color: '#dc2626' }}>*</Text></Text>
         <TextInput
           style={styles.input}
           placeholder="Your Email"
@@ -138,9 +111,7 @@ export default function SignupOrganization() {
 
       {/* Password */}
       <View style={styles.field}>
-        <Text style={styles.label}>
-          Password <Text style={{ color: "#dc2626" }}>*</Text>
-        </Text>
+        <Text style={styles.label}>Password <Text style={{ color: '#dc2626' }}>*</Text></Text>
         <TextInput
           style={styles.input}
           placeholder="Your Password"
@@ -181,10 +152,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: "center",
   },
-  field: {
-    width: "100%",
-    marginBottom: 12,
-  },
+  field: { width: "100%", marginBottom: 12 },
   label: {
     fontSize: 14,
     fontWeight: "600",
@@ -200,26 +168,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1F2937",
   },
-  textArea: {
-    height: 100,
-    textAlignVertical: "top",
-  },
-  buttonWrapper: {
-    width: "100%",
-    marginTop: 12,
-  },
-  altRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 16,
-  },
-  altText: {
-    color: "#6B7280",
-    fontSize: 14,
-  },
-  altLink: {
-    color: "#4CAF50",
-    fontSize: 14,
-    fontWeight: "600",
-  },
+  textArea: { height: 100, textAlignVertical: "top" },
+  buttonWrapper: { width: "100%", marginTop: 12 },
+  altRow: { flexDirection: "row", justifyContent: "center", marginTop: 16 },
+  altText: { color: "#6B7280", fontSize: 14 },
+  altLink: { color: "#4CAF50", fontSize: 14, fontWeight: "600" },
 });
