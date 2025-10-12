@@ -1,89 +1,98 @@
-import React, { useEffect, useRef, useState } from "react";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+// GeolocationRoute.jsx
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import * as Location from "expo-location";
 import Constants from "expo-constants";
-import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
-const API_KEY = Constants.expoConfig?.extra?.GOOGLE_MAPS_API_KEY;
 
-
-export default function GeolocationRoute({ dropoff, showDirections = true, children }) {
+export default function GeolocationRoute({ dropoff, children, onRouteReady }) {
   const [pickup, setPickup] = useState(null);
   const [denied, setDenied] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [routeCoords, setRouteCoords] = useState([]);
   const mapRef = useRef(null);
 
-  const dest = dropoff ?? { latitude: 34.4262, longitude: -119.84 };
-  const API_KEY = Constants.expoConfig?.extra?.GOOGLE_MAPS_API_KEY;
+  const API_KEY =
+    Constants.expoConfig?.extra?.GOOGLE_MAPS_API_KEY ??
+    Constants.manifest?.extra?.GOOGLE_MAPS_API_KEY ?? "";
+
+  const dest = useMemo(
+    () => dropoff || { latitude: 34.4262, longitude: -119.84 },
+    [dropoff]
+  );
+  const origin = useMemo(() => (pickup ? { ...pickup } : null), [pickup]);
 
   useEffect(() => {
     (async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setDenied(true);
-          setLoading(false);
-          return;
-        }
-
-        const { coords } = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
-        });
-        setPickup({ latitude: coords.latitude, longitude: coords.longitude });
-      } catch (e) {
-        setDenied(true);
-      } finally {
-        setLoading(false);
-      }
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") return setDenied(true);
+      const { coords } = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+      setPickup({ latitude: coords.latitude, longitude: coords.longitude });
     })();
   }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator />
-        <Text style={{ marginTop: 8 }}>Getting your location…</Text>
-      </View>
-    );
-  }
-
-  if (denied) {
-    return (
-      <View style={styles.center}>
-        <Text>Location permission denied. Enable it in settings to see the route.</Text>
-      </View>
-    );
-  }
+  if (denied) return <View style={s.center}><Text>Location permission denied.</Text></View>;
+  if (!origin) return <View style={s.center}><ActivityIndicator /><Text>Getting your location…</Text></View>;
 
   return (
     <MapView
       ref={mapRef}
+      style={StyleSheet.absoluteFill}
       provider={PROVIDER_GOOGLE}
-      style={styles.map}
       initialRegion={{
-        latitude: pickup?.latitude ?? dest.latitude,
-        longitude: pickup?.longitude ?? dest.longitude,
+        latitude: origin.latitude,
+        longitude: origin.longitude,
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
       }}
     >
-      {pickup && <Marker coordinate={pickup} title="Pickup" />}
-      {dest && <Marker coordinate={dest} title="Dropoff" />}
-      {showDirections && pickup && dest && API_KEY && (
+      <Marker coordinate={origin} pinColor="green" title="Pickup" />
+      <Marker coordinate={dest} pinColor="red" title="Dropoff" />
+
+      {!!API_KEY && (
         <MapViewDirections
-          origin={pickup}
+          origin={origin}
           destination={dest}
           apikey={API_KEY}
-          strokeWidth={5}
+          mode="DRIVING"
+          strokeWidth={8}
+          strokeColor="magenta"
+          onReady={(res) => {
+            setRouteCoords(res.coordinates);
+            onRouteReady?.({
+              distanceKm: res.distance,        // number (km)
+              durationMin: res.duration,       // number (minutes)
+              start: origin,
+              end: dest,
+            });
+            setTimeout(() => {
+              mapRef.current?.fitToCoordinates(res.coordinates, {
+                edgePadding: { top: 80, right: 80, bottom: 80, left: 80 },
+                animated: true,
+              });
+            }, 200);
+          }}
+          onError={(m) => console.warn("Directions error:", m)}
         />
       )}
-      {/* allow injected markers */}
+
+      {routeCoords.length > 0 && (
+        <Polyline
+          coordinates={routeCoords}
+          strokeWidth={8}
+          strokeColor="magenta"
+          lineJoin="round"
+          lineCap="round"
+        />
+      )}
+
       {children}
     </MapView>
   );
 }
 
-const styles = StyleSheet.create({
-  map: { flex: 1 },
-  center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 16 },
+const s = StyleSheet.create({
+  center: { flex: 1, alignItems: "center", justifyContent: "center" },
 });
