@@ -3,11 +3,21 @@ import { View, Text, StyleSheet, Animated, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MapPin, Building2 } from "lucide-react-native";
 import { appGradient, COLORS } from "../../styles/global";
+import GeolocationRoute from "../GeolocationRoute";
+import { Marker } from "react-native-maps";
+
 
 export default function OrganizationMap() {
   // Animated pulsing for active deliveries
-  const pulseActive1 = useRef(new Animated.Value(1)).current;
-  const pulseActive2 = useRef(new Animated.Value(1)).current;
+  const ACTIVE_DELIVERIES = [
+    { latitude: 34.4189, longitude: -119.8526 },
+    { latitude: 34.4098, longitude: -119.8462 },
+  ];
+  const COMPLETED_DELIVERIES = [
+    { latitude: 34.4145, longitude: -119.8501 },
+  ];
+
+  const DROP_OFF = { latitude: 34.4127, longitude: -119.8610 };
 
   useEffect(() => {
     const animate = (pulse) => {
