@@ -43,7 +43,7 @@ Make sure you have these installed before running the project:
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/mgaoann/dash-4-good.git](https://github.com/mgaoann/dash-4-good.git)
+git clone [https://github.com/mgaoann/dash-4-good.git]
 cd dash-4-good/frontend
 cd frontend
 ```
