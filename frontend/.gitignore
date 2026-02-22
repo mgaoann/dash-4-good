@@ -7,7 +7,7 @@ node_modules/
 .vscode/
 node_modules
 
-
+.env
 
 # Ignore node modules
 node_modules/

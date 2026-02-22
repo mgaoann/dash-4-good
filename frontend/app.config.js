@@ -1,10 +1,28 @@
-import 'dotenv/config';
-console.log('CONFIG sees key len:', (process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY || '').length);
-
 export default {
   expo: {
-    ios: { config: { googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY } },
-    android: { config: { googleMaps: { apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY } } },
-    extra: { GOOGLE_MAPS_API_KEY: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY },
+    name: "Dash-4-Good",
+    slug: "dash-4-good",
+    scheme: "dash4good",
+    version: "1.0.0",
+    orientation: "portrait",
+
+    //  icon: "./assets/icon.png",
+
+    splash: {
+      // image: "./assets/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#ffffff",
+    },
+
+    ios: {
+      supportsTablet: true,
+    },
+
+    android: {
+      adaptiveIcon: {
+        // foregroundImage: "./assets/adaptive-icon.png",
+        backgroundColor: "#ffffff",
+      },
+    },
   },
 };

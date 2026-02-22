@@ -6,18 +6,18 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from "react-native";
 import { useState } from "react";
-import { X, MapPin, Package, Clock, DollarSign } from "lucide-react-native";
+import { X, MapPin, Package, Clock } from "lucide-react-native";
 import { COLORS } from "../styles/global";
 import Button from "./Button";
 
-// TODO (Backend): Save new request to Firestore
-// TODO (Backend): Validate form data before saving
-// TODO (Notifications): Notify nearby volunteers about new request
-
-export default function CreateRequestModal({ visible, onClose, onCreate, orgName }) {
+export default function CreateRequestModal({
+  visible,
+  onClose,
+  onCreate,
+  orgName,
+}) {
   const [formData, setFormData] = useState({
     title: "",
     pickup: "",
@@ -28,34 +28,49 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
     estimatedTime: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errorMessage) setErrorMessage(""); // Clear error when user types
   };
 
-  const handleSubmit = () => {
-    // Basic validation
-    if (!formData.title || !formData.pickup || !formData.dropoff || !formData.items) {
-      Alert.alert("Missing Information", "Please fill in all required fields.");
+  const handleSubmit = async () => {
+    // 1. Validation
+    if (
+      !formData.title.trim() ||
+      !formData.pickup.trim() ||
+      !formData.dropoff.trim() ||
+      !formData.items.trim()
+    ) {
+      setErrorMessage("Please fill in all required fields marked with *");
       return;
     }
 
-    const payload = {
-      ...formData,
-      organization: orgName,
-    };
-    console.log("Creating request:", payload);
-    // TODO (Backend): Save to Firestore under this organization
-    if (onCreate) {
-      onCreate(payload);
+    setIsSaving(true);
+    setErrorMessage("");
+
+    try {
+      const payload = {
+        ...formData,
+        organizationName: orgName,
+        createdAt: new Date().toISOString(),
+      };
+
+      if (onCreate) {
+        await onCreate(payload);
+      }
+
+      handleClose(); // Reset and close on success
+    } catch (error) {
+      setErrorMessage("Failed to create request. Please try again.");
+    } finally {
+      setIsSaving(false);
     }
-    Alert.alert("Success", "Request created successfully!");
-    onClose();
   };
 
-  const resetForm = () => {
+  const handleClose = () => {
     setFormData({
       title: "",
       pickup: "",
@@ -65,10 +80,7 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
       urgency: "normal",
       estimatedTime: "",
     });
-  };
-
-  const handleClose = () => {
-    resetForm();
+    setErrorMessage("");
     onClose();
   };
 
@@ -82,83 +94,71 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
         <View style={styles.header}>
           <Text style={styles.title}>Create New Request</Text>
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-            <X size={24} color="#6B7280" />
+            <X size={24} color="#111827" />
           </TouchableOpacity>
         </View>
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Request Title */}
+          {/* Error Banner */}
+          {errorMessage !== "" && (
+            <View style={styles.errorBox}>
+              <Text style={styles.errorText}>{errorMessage}</Text>
+            </View>
+          )}
+
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Request Title *</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g., Fresh Produce Delivery"
-              placeholderTextColor="#6B7280"
+              placeholder="e.g., Weekly Grocery Pickup"
               value={formData.title}
-              onChangeText={(value) => handleInputChange("title", value)}
+              onChangeText={(v) => handleInputChange("title", v)}
             />
           </View>
 
-          {/* Pickup Location */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Pickup Location *</Text>
+            <Text style={styles.label}>Pickup Address *</Text>
             <View style={styles.inputWithIcon}>
-              <MapPin size={20} color="#6B7280" style={styles.inputIcon} />
+              <MapPin
+                size={18}
+                color={COLORS.primary}
+                style={styles.inputIcon}
+              />
               <TextInput
-                style={[styles.input, styles.inputWithIconText]}
-                placeholder="e.g., Farmers Market"
-                placeholderTextColor="#6B7280"
+                style={styles.inputNoBorder}
+                placeholder="Street address, City"
                 value={formData.pickup}
-                onChangeText={(value) => handleInputChange("pickup", value)}
+                onChangeText={(v) => handleInputChange("pickup", v)}
               />
             </View>
           </View>
 
-          {/* Dropoff Location */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Dropoff Location *</Text>
+            <Text style={styles.label}>Dropoff Address *</Text>
             <View style={styles.inputWithIcon}>
-              <MapPin size={20} color="#6B7280" style={styles.inputIcon} />
+              <MapPin size={18} color="#F59E0B" style={styles.inputIcon} />
               <TextInput
-                style={[styles.input, styles.inputWithIconText]}
-                placeholder="e.g., Downtown Food Bank"
-                placeholderTextColor="#6B7280"
+                style={styles.inputNoBorder}
+                placeholder="Destination address"
                 value={formData.dropoff}
-                onChangeText={(value) => handleInputChange("dropoff", value)}
+                onChangeText={(v) => handleInputChange("dropoff", v)}
               />
             </View>
           </View>
 
-          {/* Items Description */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Items Description *</Text>
+            <Text style={styles.label}>Items to Deliver *</Text>
             <View style={styles.inputWithIcon}>
-              <Package size={20} color="#6B7280" style={styles.inputIcon} />
+              <Package size={18} color="#6B7280" style={styles.inputIcon} />
               <TextInput
-                style={[styles.input, styles.inputWithIconText]}
-                placeholder="e.g., 10 bags of fruits and vegetables"
-                placeholderTextColor="#6B7280"
+                style={styles.inputNoBorder}
+                placeholder="e.g., 5 Boxes of Bread"
                 value={formData.items}
-                onChangeText={(value) => handleInputChange("items", value)}
+                onChangeText={(v) => handleInputChange("items", v)}
               />
             </View>
           </View>
 
-          {/* Additional Description */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Additional Details</Text>
-            <TextInput
-              style={[styles.input, styles.textArea]}
-              placeholder="Any special instructions or additional information..."
-              placeholderTextColor="#6B7280"
-              value={formData.description}
-              onChangeText={(value) => handleInputChange("description", value)}
-              multiline
-              numberOfLines={3}
-            />
-          </View>
-
-          {/* Urgency Level */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Urgency Level</Text>
             <View style={styles.urgencyContainer}>
@@ -171,15 +171,19 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
                   key={urgency.key}
                   style={[
                     styles.urgencyButton,
-                    formData.urgency === urgency.key && styles.urgencyButtonSelected,
-                    { borderColor: urgency.color }
+                    formData.urgency === urgency.key && {
+                      backgroundColor: urgency.color,
+                      borderColor: urgency.color,
+                    },
                   ]}
                   onPress={() => handleInputChange("urgency", urgency.key)}
                 >
-                  <Text style={[
-                    styles.urgencyText,
-                    formData.urgency === urgency.key && { color: urgency.color }
-                  ]}>
+                  <Text
+                    style={[
+                      styles.urgencyText,
+                      formData.urgency === urgency.key && { color: "#fff" },
+                    ]}
+                  >
                     {urgency.label}
                   </Text>
                 </TouchableOpacity>
@@ -187,28 +191,21 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
             </View>
           </View>
 
-          {/* Estimated Time */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Estimated Delivery Time</Text>
-            <View style={styles.inputWithIcon}>
-              <Clock size={20} color="#6B7280" style={styles.inputIcon} />
-              <TextInput
-                style={[styles.input, styles.inputWithIconText]}
-                placeholder="e.g., 20 minutes"
-                placeholderTextColor="#6B7280"
-                value={formData.estimatedTime}
-                onChangeText={(value) => handleInputChange("estimatedTime", value)}
-              />
-            </View>
+            <Text style={styles.label}>Notes / Instructions</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              placeholder="Door code, specific person to ask for, etc."
+              value={formData.description}
+              onChangeText={(v) => handleInputChange("description", v)}
+              multiline
+            />
           </View>
         </ScrollView>
 
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </TouchableOpacity>
           <Button
-            title="Create Request"
+            title={isSaving ? "Creating..." : "Post Request"}
             onPress={handleSubmit}
             style={styles.submitButton}
           />
@@ -219,112 +216,63 @@ export default function CreateRequestModal({ visible, onClose, onCreate, orgName
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F9FAFB",
-  },
+  container: { flex: 1, backgroundColor: "#fff" },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#fff",
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: "#F3F4F6",
   },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#1F2937",
-  },
-  closeButton: {
-    padding: 4,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#374151",
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#D1D5DB",
-    borderRadius: 8,
+  title: { fontSize: 18, fontWeight: "700", color: "#111827" },
+  content: { flex: 1, padding: 20 },
+  errorBox: {
+    backgroundColor: "#FEE2E2",
     padding: 12,
+    borderRadius: 8,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#F87171",
+  },
+  errorText: {
+    color: "#B91C1C",
+    fontWeight: "600",
+    textAlign: "center",
+    fontSize: 14,
+  },
+  inputGroup: { marginBottom: 20 },
+  label: { fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 8 },
+  input: {
+    backgroundColor: "#F9FAFB",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 10,
+    padding: 14,
     fontSize: 16,
-    color: "#1F2937",
   },
   inputWithIcon: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#F9FAFB",
     borderWidth: 1,
-    borderColor: "#D1D5DB",
-    borderRadius: 8,
+    borderColor: "#E5E7EB",
+    borderRadius: 10,
     paddingHorizontal: 12,
   },
-  inputIcon: {
-    marginRight: 8,
-  },
-  inputWithIconText: {
-    flex: 1,
-    borderWidth: 0,
-    padding: 12,
-    paddingLeft: 0,
-  },
-  textArea: {
-    height: 80,
-    textAlignVertical: "top",
-  },
-  urgencyContainer: {
-    flexDirection: "row",
-    gap: 8,
-  },
+  inputIcon: { marginRight: 10 },
+  inputNoBorder: { flex: 1, paddingVertical: 14, fontSize: 16 },
+  textArea: { height: 100, textAlignVertical: "top" },
+  urgencyContainer: { flexDirection: "row", gap: 10 },
   urgencyButton: {
     flex: 1,
     padding: 12,
+    borderRadius: 10,
     borderWidth: 1,
-    borderRadius: 8,
+    borderColor: "#E5E7EB",
     alignItems: "center",
   },
-  urgencyButtonSelected: {
-    backgroundColor: "#F3F4F6",
-  },
-  urgencyText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#6B7280",
-  },
-  footer: {
-    flexDirection: "row",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
-    gap: 12,
-  },
-  cancelButton: {
-    flex: 1,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#D1D5DB",
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  cancelText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#6B7280",
-  },
-  submitButton: {
-    flex: 1,
-  },
+  urgencyText: { fontWeight: "600", color: "#6B7280" },
+  footer: { padding: 20, borderTopWidth: 1, borderTopColor: "#F3F4F6" },
+  submitButton: { width: "100%", height: 56, borderRadius: 12 },
 });

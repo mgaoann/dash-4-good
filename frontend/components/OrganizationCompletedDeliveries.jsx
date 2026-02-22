@@ -1,16 +1,19 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 import { MapPin, Package, User, Clock, Phone } from "lucide-react-native";
 import { COLORS } from "../styles/global";
 
-// TODO (Backend): Fetch organization's completed deliveries for the logged-in orgId
-//  - Include volunteer contact and completedAt timestamp
-//  - Implement pagination if needed
-//  - Secure data access by orgId
-
 export default function OrganizationCompletedDeliveries({ items = [] }) {
   const contactVolunteer = (phone) => {
-    console.log("Contact (past volunteer):", phone);
-    // TODO (Native): Deep link to phone/SMS (Linking API)
+    if (!phone) return;
+    // Native deep link to dial the number
+    Linking.openURL(`tel:${phone}`);
   };
 
   const renderItem = ({ item }) => (
@@ -21,14 +24,19 @@ export default function OrganizationCompletedDeliveries({ items = [] }) {
           <Text style={styles.badgeText}>Completed</Text>
         </View>
       </View>
+
       <View style={styles.details}>
         <View style={styles.detailRow}>
           <MapPin size={16} color={COLORS.primary} style={styles.icon} />
-          <Text style={styles.detail}>From: {item.pickup}</Text>
+          <Text style={styles.detail} numberOfLines={1}>
+            From: {item.pickup}
+          </Text>
         </View>
         <View style={styles.detailRow}>
           <MapPin size={16} color="#F59E0B" style={styles.icon} />
-          <Text style={styles.detail}>To: {item.dropoff}</Text>
+          <Text style={styles.detail} numberOfLines={1}>
+            To: {item.dropoff}
+          </Text>
         </View>
         <View style={styles.detailRow}>
           <Package size={16} color="#6B7280" style={styles.icon} />
@@ -36,21 +44,35 @@ export default function OrganizationCompletedDeliveries({ items = [] }) {
         </View>
         <View style={styles.detailRow}>
           <User size={16} color="#3B82F6" style={styles.icon} />
-          <Text style={styles.detail}>Volunteer: {item.volunteer}</Text>
+          <Text style={styles.detail}>
+            Volunteer: {item.volunteerName || "Completed"}
+          </Text>
         </View>
         <View style={styles.detailRow}>
           <Clock size={16} color="#6B7280" style={styles.icon} />
-          <Text style={styles.detail}>Completed: {item.completedAt}</Text>
+          <Text style={styles.detail}>
+            Finished:{" "}
+            {item.completedAt
+              ? new Date(item.completedAt).toLocaleDateString()
+              : "Recently"}
+          </Text>
         </View>
       </View>
+
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.outlineButton} onPress={() => contactVolunteer(item.volunteerPhone)}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.outlineButton}
+          onPress={() => contactVolunteer(item.volunteerPhone)}
+        >
           <Phone size={16} color="#374151" style={styles.icon} />
-          <Text style={styles.outlineText}>Contact Volunteer</Text>
+          <Text style={styles.outlineText}>Call Volunteer</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
+
+  if (items.length === 0) return null;
 
   return (
     <View style={styles.section}>
@@ -68,78 +90,83 @@ export default function OrganizationCompletedDeliveries({ items = [] }) {
 
 const styles = StyleSheet.create({
   section: {
-    marginTop: 9
+    marginTop: 10,
+    marginBottom: 30,
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#1F2937",
-    marginBottom: 10
+    fontWeight: "700",
+    color: "#111827",
+    marginBottom: 12,
   },
   card: {
     backgroundColor: "#fff",
     padding: 16,
     borderRadius: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    marginBottom: 15,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
     borderLeftWidth: 4,
-  borderLeftColor: COLORS.primary,
+    borderLeftColor: COLORS.primary, // Green indicator for success
   },
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 8
+    alignItems: "center",
+    marginBottom: 12,
   },
   title: {
-    fontWeight: "600",
-    fontSize: 15,
-    color: "#1F2937"
+    fontWeight: "700",
+    fontSize: 16,
+    color: "#111827",
+    flex: 1,
   },
   badge: {
-    backgroundColor: "#D1FAE5",
-    paddingHorizontal: 10,
+    backgroundColor: "#DCFCE7", // Soft green
+    paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 12
+    borderRadius: 6,
   },
   badgeText: {
-    fontSize: 12, 
-    color: COLORS.primary 
+    fontSize: 11,
+    fontWeight: "700",
+    color: COLORS.primary,
+    textTransform: "uppercase",
   },
-  details: { 
-    marginBottom: 12 
+  details: {
+    marginBottom: 16,
   },
-  detailRow: { 
-    flexDirection: "row", 
-    alignItems: "center", 
-    marginBottom: 6 
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
   },
-  icon: { 
-    marginRight: 6 
+  icon: {
+    marginRight: 8,
   },
-  detail: { 
-    fontSize: 13, 
-    color: "#4B5563" 
+  detail: {
+    fontSize: 14,
+    color: "#4B5563",
+    flex: 1,
   },
-  actions: { 
-    flexDirection: "row" 
+  actions: {
+    borderTopWidth: 1,
+    borderTopColor: "#F3F4F6",
+    paddingTop: 12,
   },
   outlineButton: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#D1D5DB",
-    padding: 10,
-    borderRadius: 8,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F9FAFB",
+    paddingVertical: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
-  outlineText: { 
-    fontSize: 13, 
-    color: "#374151", 
-    marginLeft: 4 
+  outlineText: {
+    fontSize: 14,
+    color: "#374151",
+    fontWeight: "600",
   },
 });
-
-

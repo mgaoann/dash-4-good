@@ -3,19 +3,23 @@ import { User, Building2 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { COLORS } from "../styles/global";
 
-// target: "volunteer" | "organization"
-export default function Profile({ target = "volunteer", name = "User", imageUri = null }) {
+export default function Profile({
+  target = "volunteer",
+  name = "User",
+  imageUri = null,
+}) {
   const router = useRouter();
   const openProfile = () => {
-    if (target === "organization") {
-      router.push("/organization/OrganizationProfile");
-      return;
-    }
     router.push("/profilePage");
   };
 
   // helper: derive initials from name
-  const initials = (name || "").split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+  const initials = (name || "")
+    .split(" ")
+    .map((p) => p[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <TouchableOpacity

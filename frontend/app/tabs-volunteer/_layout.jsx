@@ -1,20 +1,21 @@
 import { Tabs } from "expo-router";
 import { Home, Map, MessageCircle, User } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { volunteerConversations } from '../../data/dummyMessages';
 
 export default function VolunteerTabsLayout() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F7F7" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <Tabs
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: "#4CAF50",
           tabBarInactiveTintColor: "#9CA3AF",
+          sceneContainerStyle: { backgroundColor: "#fff" }, // Forces page background to white
           tabBarStyle: {
-            backgroundColor: "#F7F7F7",
-            borderTopWidth: 0,
-            elevation: 8,
+            backgroundColor: "#fff", // Forces tab bar to white
+            borderTopWidth: 1,
+            borderTopColor: "#E5E7EB", // Subtle separator line
+            elevation: 0, 
             height: 60,
             paddingBottom: 6,
           },
@@ -42,14 +43,6 @@ export default function VolunteerTabsLayout() {
             tabBarIcon: ({ color }) => (
               <MessageCircle color={color} size={22} />
             ),
-            tabBarBadge: (() => {
-              try {
-                const unread = volunteerConversations.reduce((acc, c) => acc + (c.unread || 0), 0);
-                return unread > 0 ? unread : null;
-              } catch (e) {
-                return null;
-              }
-            })(),
           }}
         />
         <Tabs.Screen

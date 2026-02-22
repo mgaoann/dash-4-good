@@ -1,29 +1,20 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { MapPin, Package, Clock, Edit, Trash2 } from "lucide-react-native";
 import { COLORS } from "../styles/global";
 
-// TODO (Backend):
-//  - Fetch organization-specific pending requests from Firestore (filter by orgId)
-//  - Update when volunteer claims a request
-//  - Implement edit and delete functionality
-
 export default function PendingRequests({ items = [], onEdit, onDelete }) {
-  const editRequest = (id) => {
-    console.log("Edit request:", id);
-    // TODO (Backend): Navigate to edit flow or prefill modal from DB
-    if (onEdit) onEdit(id);
-  };
-
-  const deleteRequest = (id) => {
-    console.log("Delete request:", id);
-    // TODO (Backend): Delete in Firestore; optimistic update here
-    if (onDelete) onDelete(id);
-  };
-
   const renderCard = ({ item }) => (
     <View style={styles.card}>
       <View style={styles.headerRow}>
-        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.title} numberOfLines={1}>
+          {item.title}
+        </Text>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>Pending</Text>
         </View>
@@ -32,11 +23,15 @@ export default function PendingRequests({ items = [], onEdit, onDelete }) {
       <View style={styles.details}>
         <View style={styles.detailRow}>
           <MapPin size={16} color={COLORS.primary} style={styles.icon} />
-          <Text style={styles.detail}>From: {item.pickup}</Text>
+          <Text style={styles.detail} numberOfLines={1}>
+            Pickup: {item.pickup}
+          </Text>
         </View>
         <View style={styles.detailRow}>
           <MapPin size={16} color="#F59E0B" style={styles.icon} />
-          <Text style={styles.detail}>To: {item.dropoff}</Text>
+          <Text style={styles.detail} numberOfLines={1}>
+            Dropoff: {item.dropoff}
+          </Text>
         </View>
         <View style={styles.detailRow}>
           <Package size={16} color="#6B7280" style={styles.icon} />
@@ -45,27 +40,33 @@ export default function PendingRequests({ items = [], onEdit, onDelete }) {
       </View>
 
       <View style={styles.extraInfo}>
-        <View style={styles.infoGroup}>
-          <View style={styles.infoItem}>
-            <Clock size={16} color="#6B7280" style={styles.icon} />
-            <Text style={styles.infoText}>{item.estimatedTime}</Text>
-          </View>
-          <Text style={styles.distance}>{item.distance}</Text>
+        <View style={styles.infoItem}>
+          <Clock size={14} color="#6B7280" />
+          <Text style={styles.infoText}>
+            {item.estimatedTime || "Standard"}
+          </Text>
         </View>
-        <Text style={styles.createdAt}>Posted {item.createdAt}</Text>
+        <Text style={styles.createdAt}>
+          {item.createdAt
+            ? new Date(item.createdAt).toLocaleDateString()
+            : "Just now"}
+        </Text>
       </View>
 
       <View style={styles.actions}>
-        <TouchableOpacity 
+        <TouchableOpacity
+          activeOpacity={0.7}
           style={styles.editButton}
-          onPress={() => editRequest(item.id)}
+          onPress={() => onEdit && onEdit(item.id)}
         >
-          <Edit size={16} color="#6B7280" style={styles.icon} />
+          <Edit size={16} color="#4B5563" style={styles.icon} />
           <Text style={styles.editText}>Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+
+        <TouchableOpacity
+          activeOpacity={0.7}
           style={styles.deleteButton}
-          onPress={() => deleteRequest(item.id)}
+          onPress={() => onDelete && onDelete(item.id)}
         >
           <Trash2 size={16} color="#DC2626" style={styles.icon} />
           <Text style={styles.deleteText}>Delete</Text>
@@ -73,6 +74,8 @@ export default function PendingRequests({ items = [], onEdit, onDelete }) {
       </View>
     </View>
   );
+
+  if (items.length === 0) return null;
 
   return (
     <View style={styles.section}>
@@ -90,48 +93,49 @@ export default function PendingRequests({ items = [], onEdit, onDelete }) {
 
 const styles = StyleSheet.create({
   section: {
-    marginTop: 9,
-    // paddingHorizontal removed so width matches siblings; parent provides padding
+    marginTop: 10,
+    marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#1F2937",
+    fontWeight: "700",
+    color: "#111827",
     marginBottom: 12,
   },
   card: {
     backgroundColor: "#fff",
     padding: 16,
-    borderRadius: 12, // align with other cards
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    marginBottom: 15,
-    borderLeftWidth: 4, // consistent accent
-    borderLeftColor: "#F59E0B",
+    borderRadius: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderLeftWidth: 4,
+    borderLeftColor: "#F59E0B", // Amber for Pending
   },
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 8,
+    alignItems: "center",
+    marginBottom: 12,
   },
   title: {
-    fontWeight: "600",
+    fontWeight: "700",
     fontSize: 16,
-    color: "#1F2937",
+    color: "#111827",
+    flex: 1,
+    marginRight: 8,
   },
   badge: {
-    backgroundColor: "#FEF3C7",
-    paddingHorizontal: 10,
+    backgroundColor: "#FEF3C7", // Soft Amber
+    paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 6,
   },
   badgeText: {
-    fontSize: 12,
+    fontSize: 11,
+    fontWeight: "700",
     color: "#D97706",
-    fontWeight: "500",
+    textTransform: "uppercase",
   },
   details: {
     marginBottom: 12,
@@ -139,25 +143,22 @@ const styles = StyleSheet.create({
   detailRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6,
+    marginBottom: 8,
   },
   icon: {
-    marginRight: 6,
+    marginRight: 8,
   },
   detail: {
-    fontSize: 13,
+    fontSize: 14,
     color: "#4B5563",
+    flex: 1,
   },
   extraInfo: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
-  },
-  infoGroup: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
+    marginBottom: 16,
+    paddingTop: 8,
   },
   infoItem: {
     flexDirection: "row",
@@ -165,50 +166,50 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 12,
-    color: "#4B5563",
-    marginLeft: 4,
-  },
-  distance: {
-    fontSize: 12,
     color: "#6B7280",
+    marginLeft: 4,
   },
   createdAt: {
     fontSize: 12,
-    color: "#6B7280",
+    color: "#9CA3AF",
   },
   actions: {
     flexDirection: "row",
-    gap: 8,
+    gap: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#F3F4F6",
+    paddingTop: 12,
   },
   editButton: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#D1D5DB",
-    padding: 10,
-    borderRadius: 8,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F9FAFB",
+    paddingVertical: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
   editText: {
-    fontSize: 13,
-    color: "#6B7280",
-    marginLeft: 4,
+    fontSize: 14,
+    color: "#4B5563",
+    fontWeight: "600",
   },
   deleteButton: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#DC2626",
-    padding: 10,
-    borderRadius: 8,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#FFF1F2", // Very soft red
+    paddingVertical: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#FECACA",
   },
   deleteText: {
-    fontSize: 13,
+    fontSize: 14,
     color: "#DC2626",
-    marginLeft: 4,
-    fontWeight: "500",
+    fontWeight: "600",
   },
 });

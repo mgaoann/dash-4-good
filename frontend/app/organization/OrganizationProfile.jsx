@@ -4,7 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
+  ActivityIndicator,
 } from "react-native";
 import {
   Building2,
@@ -20,38 +20,106 @@ import {
   Edit,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { orgInfo, orgCompletedDeliveries } from "../../data/dummyOrganization";
+import { useState, useEffect } from "react";
 import { COLORS } from "../../styles/global";
+
+// Firebase imports
+import { auth, db } from "../../firebase";
+import { signOut } from "firebase/auth";
+import { doc, onSnapshot, collection, query, where } from "firebase/firestore";
 
 export default function OrganizationProfile() {
   const router = useRouter();
-  // TODO (Auth): hydrate org data from backend for logged-in org
-  const [org, setOrg] = useState(orgInfo);
-  const [editing, setEditing] = useState(false);
 
-  // TODO: Auth -> Replace this with Firebase Auth signOut()
-  // After logout, redirect user back to Welcome/Login screen
-  const onLogout = () => {
-    router.push("/");
+  const [org, setOrg] = useState(null);
+  const [completedDeliveries, setCompletedDeliveries] = useState([]);
+  const [stats, setStats] = useState({
+    totalRequests: 0,
+    completedCount: 0,
+    mealsDelivered: 0,
+    volunteersHelped: 0,
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Listen to Firestore for Profile Data and Request Stats
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    // 1. Live listener for the Organization's profile data
+    const unsubUser = onSnapshot(
+      doc(db, "users", user.uid),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          setOrg(docSnap.data());
+        }
+      },
+      (error) => {
+        setErrorMessage("Failed to load profile.");
+      },
+    );
+
+    // 2. Live listener for the Organization's requests to calculate stats
+    const q = query(
+      collection(db, "requests"),
+      where("organizationId", "==", user.uid),
+    );
+    const unsubReqs = onSnapshot(q, (snapshot) => {
+      const reqs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+      const completed = reqs.filter((r) => r.status === "completed");
+
+      // Calculate unique volunteers helped
+      const uniqueVolunteers = new Set(
+        completed.map((r) => r.volunteerId).filter(Boolean),
+      ).size;
+
+      setStats({
+        totalRequests: reqs.length,
+        completedCount: completed.length,
+        mealsDelivered: completed.length * 25, // Assuming average of 25 meals per delivery for gamification
+        volunteersHelped: uniqueVolunteers,
+      });
+
+      // Sort completed deliveries by most recent
+      const sortedCompleted = completed.sort(
+        (a, b) => new Date(b.completedAt || 0) - new Date(a.completedAt || 0),
+      );
+      setCompletedDeliveries(sortedCompleted);
+
+      setLoading(false);
+    });
+
+    return () => {
+      unsubUser();
+      unsubReqs();
+    };
+  }, []);
+
+  const onLogout = async () => {
+    try {
+      await signOut(auth);
+      router.replace("/"); // Go back to Welcome screen
+    } catch (error) {
+      setErrorMessage("Error logging out: " + error.message);
+    }
   };
 
-  // TODO (Backend):
-  //  - Replace dummy stats with Firestore queries
-  //  - Fetch total requests, completed deliveries, meals delivered
-  //  - Use real organization profile data (name, email, phone, location)
-
-  // TODO (Notifications):
-  //  - Trigger achievement unlocks & show toast/push when milestones hit
-  //  - Example: "Community Champion" after 50 completed requests
-
-  const organizationStats = {
-    // TODO (Backend): derive from Firestore aggregates for this orgId
-    totalRequests: orgCompletedDeliveries.length + 2,
-    completedDeliveries: orgCompletedDeliveries.length,
-    mealsDelivered: 1200,
-    volunteersHelped: 25,
-  };
+  if (loading || !org) {
+    return (
+      <View
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <ActivityIndicator size="large" color={COLORS.primary} />
+        <Text style={{ marginTop: 10, color: "gray" }}>Loading Profile...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView
@@ -63,6 +131,14 @@ export default function OrganizationProfile() {
         <Text style={styles.headerSubtitle}>Manage your account</Text>
       </View>
 
+      {/* Error Banner */}
+      {errorMessage !== "" && (
+        <View style={styles.errorBox}>
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        </View>
+      )}
+
+      {/* Profile Info Card */}
       <View style={styles.card}>
         <View style={styles.profileHeader}>
           <View style={styles.avatar}>
@@ -75,7 +151,12 @@ export default function OrganizationProfile() {
         </View>
 
         {/* About */}
-        <View style={[styles.infoRow, { alignItems: "flex-start" }]}>
+        <View
+          style={[
+            styles.infoRow,
+            { alignItems: "flex-start", marginBottom: 8 },
+          ]}
+        >
           <Text
             style={[
               styles.infoText,
@@ -85,61 +166,34 @@ export default function OrganizationProfile() {
             About
           </Text>
         </View>
-        {editing ? (
-          <TextInput
-            style={[styles.infoText, styles.textArea]}
-            multiline
-            numberOfLines={3}
-            value={org.description}
-            onChangeText={(v) => setOrg({ ...org, description: v })}
-          />
-        ) : (
-          <Text style={[styles.infoText, { color: "#374151" }]}>
-            {org.description}
-          </Text>
-        )}
+        <Text
+          style={[
+            styles.infoText,
+            { color: "#374151", marginBottom: 16, marginLeft: 0 },
+          ]}
+        >
+          {org.description || "No description provided."}
+        </Text>
 
-        {/* Add spacing between About and contact section */}
-        <View style={{ height: 14 }} />
-
-        {/* Contact details - editable */}
+        {/* Contact details */}
         <View style={styles.infoRow}>
           <Mail size={18} color="gray" />
-          {editing ? (
-            <TextInput
-              style={[styles.infoText, styles.input]}
-              value={org.email}
-              onChangeText={(v) => setOrg({ ...org, email: v })}
-            />
-          ) : (
-            <Text style={styles.infoText}>{org.email}</Text>
-          )}
+          <Text style={styles.infoText}>{org.email}</Text>
         </View>
         <View style={styles.infoRow}>
           <Phone size={18} color="gray" />
-          {editing ? (
-            <TextInput
-              style={[styles.infoText, styles.input]}
-              value={org.phone}
-              onChangeText={(v) => setOrg({ ...org, phone: v })}
-            />
-          ) : (
-            <Text style={styles.infoText}>{org.phone}</Text>
-          )}
+          <Text style={styles.infoText}>
+            {org.phone || "No phone provided"}
+          </Text>
         </View>
         <View style={styles.infoRow}>
           <MapPin size={18} color="gray" />
-          {editing ? (
-            <TextInput
-              style={[styles.infoText, styles.input]}
-              value={org.website}
-              onChangeText={(v) => setOrg({ ...org, website: v })}
-            />
-          ) : (
-            <Text style={styles.infoText}>{org.website}</Text>
-          )}
+          <Text style={styles.infoText}>
+            {org.website || "No website provided"}
+          </Text>
         </View>
-        {/* Primary Edit Profile button placed under contact details */}
+
+        {/* Primary Edit Profile button */}
         <TouchableOpacity
           style={styles.editButton}
           onPress={() => router.push("/organization/EditOrganizationInfo")}
@@ -161,22 +215,22 @@ export default function OrganizationProfile() {
         <View style={styles.statsGrid}>
           <Stat
             label="Total Requests"
-            value={organizationStats.totalRequests}
+            value={stats.totalRequests}
             icon={<Package size={16} color="#4CAF50" />}
           />
           <Stat
             label="Completed"
-            value={organizationStats.completedDeliveries}
+            value={stats.completedCount}
             icon={<CheckCircle size={16} color="#4CAF50" />}
           />
           <Stat
-            label="Meals Delivered"
-            value={organizationStats.mealsDelivered}
+            label="Est. Meals"
+            value={stats.mealsDelivered}
             icon={<Package size={16} color="#4CAF50" />}
           />
           <Stat
-            label="Volunteers Helped"
-            value={organizationStats.volunteersHelped}
+            label="Volunteers"
+            value={stats.volunteersHelped}
             icon={<Users size={16} color="#4CAF50" />}
           />
         </View>
@@ -190,80 +244,72 @@ export default function OrganizationProfile() {
         </View>
 
         <Achievement
-          color={COLORS.primary}
+          color={stats.totalRequests > 0 ? COLORS.primary : "#D1D5DB"}
           title="First Request"
-          subtitle="Posted your first delivery request"
+          subtitle={
+            stats.totalRequests > 0
+              ? "Posted your first delivery request"
+              : "Post a request to unlock"
+          }
         />
         <Achievement
-          color="#eab308"
+          color={stats.completedCount >= 10 ? "#eab308" : "#D1D5DB"}
           title="Community Champion"
-          subtitle="Completed 10+ requests"
+          subtitle={
+            stats.completedCount >= 10
+              ? "Completed 10+ requests"
+              : "Complete 10 requests to unlock"
+          }
         />
-        <Achievement
-          color="#3b82f6"
-          title="Impact Leader"
-          subtitle="Helped 500+ people with deliveries"
-        />
-        <Achievement
-          color="#8b5cf6"
-          title="Volunteer Magnet"
-          subtitle="Worked with 20+ volunteers"
-        />
-      </View>
-
-      {/* Organization Settings */}
-      <View style={styles.card}>
-        <View style={styles.sectionHeader}>
-          <Building2 size={18} color="black" />
-          <Text style={styles.sectionTitle}>Organization Settings</Text>
-        </View>
-
-        {/* Removed duplicate Edit Organization Info setting; primary edit action is above. */}
-        <TouchableOpacity style={styles.settingButton}>
-          <Text style={styles.settingText}>Notification Preferences</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.settingButton}>
-          <Text style={styles.settingText}>Delivery Preferences</Text>
-        </TouchableOpacity>
       </View>
 
       {/* Completed Deliveries Log */}
       <View style={styles.card}>
         <View style={styles.sectionHeader}>
           <CheckCircle size={18} color="black" />
-          <Text style={styles.sectionTitle}>Completed Deliveries (Log)</Text>
+          <Text style={styles.sectionTitle}>Completed Deliveries</Text>
         </View>
-        {orgCompletedDeliveries.map((d) => (
-          <View
-            key={d.id}
-            style={[styles.achievement, { backgroundColor: "#F3F4F6" }]}
-          >
+
+        {completedDeliveries.length === 0 ? (
+          <Text style={{ color: "gray", marginTop: 8 }}>
+            No completed deliveries yet.
+          </Text>
+        ) : (
+          completedDeliveries.map((d) => (
             <View
+              key={d.id}
               style={[
-                styles.achievementIcon,
-                { backgroundColor: COLORS.primary },
+                styles.achievement,
+                { backgroundColor: "#F3F4F6", alignItems: "flex-start" },
               ]}
             >
-              <CheckCircle size={18} color="#fff" />
+              <View
+                style={[
+                  styles.achievementIcon,
+                  { backgroundColor: COLORS.primary },
+                ]}
+              >
+                <CheckCircle size={18} color="#fff" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.achievementTitle}>{d.title}</Text>
+                <Text style={styles.achievementSubtitle}>
+                  {d.pickup} → {d.dropoff}
+                </Text>
+                {d.completedAt && (
+                  <Text
+                    style={[
+                      styles.achievementSubtitle,
+                      { marginTop: 4, fontStyle: "italic" },
+                    ]}
+                  >
+                    Completed: {new Date(d.completedAt).toLocaleDateString()}
+                  </Text>
+                )}
+              </View>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.achievementTitle}>{d.title}</Text>
-              <Text style={styles.achievementSubtitle}>
-                {d.pickup} → {d.dropoff}
-              </Text>
-              <Text style={styles.achievementSubtitle}>
-                Volunteer: {d.volunteer} • {d.completedAt}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={[styles.settingButton, { borderColor: "#D1D5DB" }]}
-            >
-              <Text style={[styles.settingText, { color: "#374151" }]}>
-                Contact
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+          ))
+        )}
       </View>
 
       {/* Logout */}
@@ -294,7 +340,7 @@ function Achievement({ color, title, subtitle }) {
       <View style={[styles.achievementIcon, { backgroundColor: color }]}>
         <Award size={18} color="#fff" />
       </View>
-      <View>
+      <View style={{ flex: 1 }}>
         <Text style={styles.achievementTitle}>{title}</Text>
         <Text style={styles.achievementSubtitle}>{subtitle}</Text>
       </View>
@@ -318,53 +364,77 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#1F2937",
   },
+  headerSubtitle: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginTop: 4,
+  },
+  errorBox: {
+    backgroundColor: "#FEE2E2",
+    borderWidth: 1,
+    borderColor: "#F87171",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  errorText: {
+    color: "#B91C1C",
+    fontSize: 14,
+    textAlign: "center",
+    fontWeight: "500",
+  },
   card: {
     backgroundColor: "#fff",
     marginVertical: 8,
     padding: 16,
     borderRadius: 12,
     elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
   profileHeader: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 16,
   },
   avatar: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#4CAF50",
+    backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
   },
   name: {
     fontSize: 18,
-    fontWeight: "600"
+    fontWeight: "600",
   },
   role: {
     color: "gray",
-    textTransform: "capitalize"
+    textTransform: "capitalize",
   },
   infoRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 4
+    marginVertical: 6,
   },
   infoText: {
-    marginLeft: 8,
-    color: "gray"
+    marginLeft: 10,
+    color: "gray",
+    fontSize: 14,
   },
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: 12,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    marginLeft: 6
+    marginLeft: 6,
   },
   statsGrid: {
     flexDirection: "row",
@@ -375,7 +445,7 @@ const styles = StyleSheet.create({
   statItem: {
     width: "48%",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 16,
   },
   statHeader: {
     flexDirection: "row",
@@ -385,20 +455,20 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#4CAF50",
-    marginLeft: 4,
+    color: COLORS.primary,
+    marginLeft: 6,
   },
   statLabel: {
     fontSize: 12,
     color: "gray",
-    textAlign: "center"
+    textAlign: "center",
   },
   achievement: {
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
     borderRadius: 10,
-    marginVertical: 4,
+    marginVertical: 6,
   },
   achievementIcon: {
     width: 40,
@@ -406,31 +476,21 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 10,
+    marginRight: 12,
   },
   achievementTitle: {
-    fontWeight: "600"
+    fontWeight: "600",
+    color: "#1F2937",
   },
   achievementSubtitle: {
     fontSize: 12,
-    color: "gray"
-  },
-  settingButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    marginVertical: 4,
-  },
-  settingText: {
-    fontSize: 14,
-    color: "#374151",
+    color: "gray",
+    marginTop: 2,
   },
   logoutButton: {
     flexDirection: "row",
     backgroundColor: "#dc2626",
-    margin: 16,
+    marginVertical: 20,
     padding: 14,
     borderRadius: 12,
     justifyContent: "center",
@@ -439,16 +499,17 @@ const styles = StyleSheet.create({
   logoutText: {
     color: "#fff",
     fontWeight: "bold",
-    marginLeft: 6
+    marginLeft: 8,
+    fontSize: 16,
   },
   editButton: {
     flexDirection: "row",
     backgroundColor: COLORS.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 8,
+    justifyContent: "center",
+    marginTop: 16,
   },
   editButtonText: {
     color: "#fff",

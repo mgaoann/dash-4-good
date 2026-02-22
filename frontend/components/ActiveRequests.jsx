@@ -1,16 +1,25 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
-import { MapPin, Package, User, Clock, MessageCircle } from "lucide-react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import {
+  MapPin,
+  Package,
+  User,
+  Clock,
+  MessageCircle,
+} from "lucide-react-native";
 import { COLORS } from "../styles/global";
-
-// TODO (Backend):
-//  - Fetch organization-specific active deliveries from Firestore (filter by orgId)
-//  - Update when volunteer completes delivery
-//  - Notify organization on completion
+import { useRouter } from "expo-router";
 
 export default function ActiveRequests({ items = [] }) {
-  const contactVolunteer = (volunteerPhone) => {
-    console.log("Contacting volunteer:", volunteerPhone);
-    // TODO: Implement phone call or messaging functionality
+  const router = useRouter();
+
+  const contactVolunteer = (volunteerId) => {
+    router.push("/tabs-organization/messages");
   };
 
   const renderCard = ({ item }) => (
@@ -25,11 +34,15 @@ export default function ActiveRequests({ items = [] }) {
       <View style={styles.details}>
         <View style={styles.detailRow}>
           <MapPin size={16} color={COLORS.primary} style={styles.icon} />
-          <Text style={styles.detail}>From: {item.pickup}</Text>
+          <Text style={styles.detail} numberOfLines={1}>
+            From: {item.pickup}
+          </Text>
         </View>
         <View style={styles.detailRow}>
           <MapPin size={16} color="#F59E0B" style={styles.icon} />
-          <Text style={styles.detail}>To: {item.dropoff}</Text>
+          <Text style={styles.detail} numberOfLines={1}>
+            To: {item.dropoff}
+          </Text>
         </View>
         <View style={styles.detailRow}>
           <Package size={16} color="#6B7280" style={styles.icon} />
@@ -37,25 +50,26 @@ export default function ActiveRequests({ items = [] }) {
         </View>
         <View style={styles.detailRow}>
           <User size={16} color="#3B82F6" style={styles.icon} />
-          <Text style={styles.detail}>Volunteer: {item.volunteer}</Text>
-        </View>
-        <View style={styles.detailRow}>
-          <Clock size={16} color="#6B7280" style={styles.icon} />
-          <Text style={styles.detail}>ETA: {item.estimatedTime}</Text>
+          <Text style={styles.detail}>
+            Volunteer: {item.volunteerName || "Assigned"}
+          </Text>
         </View>
       </View>
 
       <View style={styles.actions}>
-        <TouchableOpacity 
+        <TouchableOpacity
+          activeOpacity={0.7}
           style={styles.contactButton}
-          onPress={() => contactVolunteer(item.volunteerPhone)}
+          onPress={() => contactVolunteer(item.volunteerId)}
         >
-          <MessageCircle size={16} color="#3B82F6" style={styles.icon} />
-          <Text style={styles.contactText}>Contact Volunteer</Text>
+          <MessageCircle size={16} color={COLORS.primary} style={styles.icon} />
+          <Text style={styles.contactText}>Message Volunteer</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
+
+  if (items.length === 0) return null;
 
   return (
     <View style={styles.section}>
@@ -72,78 +86,83 @@ export default function ActiveRequests({ items = [] }) {
 
 const styles = StyleSheet.create({
   section: {
-    marginTop: 9,
+    marginTop: 10,
+    marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#1F2937",
-    marginBottom: 10,
+    fontWeight: "700",
+    color: "#111827",
+    marginBottom: 12,
   },
   card: {
     backgroundColor: "#fff",
     padding: 16,
     borderRadius: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    marginBottom: 15,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
     borderLeftWidth: 4,
-    borderLeftColor: "#3B82F6",
+    borderLeftColor: "#3B82F6", // Blue indicator for "In Progress"
   },
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 8,
+    alignItems: "center",
+    marginBottom: 12,
   },
   title: {
-    fontWeight: "600",
-    fontSize: 15,
-    color: "#1F2937",
+    fontWeight: "700",
+    fontSize: 16,
+    color: "#111827",
+    flex: 1,
   },
   badge: {
-    backgroundColor: "#DBEAFE",
-    paddingHorizontal: 10,
+    backgroundColor: "#EFF6FF", // Soft blue
+    paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 6,
   },
   badgeText: {
-    fontSize: 12,
-    color: "#1E40AF",
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#2563EB",
+    textTransform: "uppercase",
   },
   details: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
   detailRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6,
+    marginBottom: 8,
   },
   icon: {
-    marginRight: 6,
+    marginRight: 8,
   },
   detail: {
-    fontSize: 13,
+    fontSize: 14,
     color: "#4B5563",
+    flex: 1,
   },
   actions: {
-    flexDirection: "row",
-    gap: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#F3F4F6",
+    paddingTop: 12,
   },
   contactButton: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#3B82F6",
-    padding: 10,
-    borderRadius: 8,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F9FAFB",
+    paddingVertical: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
   contactText: {
-    fontSize: 13,
-    color: "#3B82F6",
-    marginLeft: 4,
-    fontWeight: "500",
+    fontSize: 14,
+    color: COLORS.primary,
+    fontWeight: "600",
   },
 });

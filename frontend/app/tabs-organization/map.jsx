@@ -1,35 +1,97 @@
-import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  ActivityIndicator,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MapPin, Building2 } from "lucide-react-native";
 import { appGradient, COLORS } from "../../styles/global";
-import GeolocationRoute from "../GeolocationRoute"; 
+import GeolocationRoute from "../GeolocationRoute";
 import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+
+// Firebase imports
+import { auth, db } from "../../firebase";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 export default function OrganizationMap() {
-  const pulseActive1 = useRef(new Animated.Value(1)).current;
-  const pulseActive2 = useRef(new Animated.Value(1)).current;
+  const pulseActive = useRef(new Animated.Value(1)).current;
+  const [activeDeliveries, setActiveDeliveries] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const ACTIVE_DELIVERIES = [
-    { latitude: 34.4189, longitude: -119.8526 },
-    { latitude: 34.4098, longitude: -119.8462 },
-  ];
-  const COMPLETED_DELIVERIES = [{ latitude: 34.4145, longitude: -119.8501 }];
-
-  const DROP_OFF = { latitude: 34.4127, longitude: -119.8610 };
-
+  // Pulse animation for markers
   useEffect(() => {
     const animate = (pulse) => {
       Animated.loop(
         Animated.sequence([
-          Animated.timing(pulse, { toValue: 1.3, duration: 1000, useNativeDriver: true }),
-          Animated.timing(pulse, { toValue: 1.0, duration: 1000, useNativeDriver: true }),
-        ])
+          Animated.timing(pulse, {
+            toValue: 1.3,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulse, {
+            toValue: 1.0,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ]),
       ).start();
     };
-    animate(pulseActive1);
-    animate(pulseActive2);
-  }, [pulseActive1, pulseActive2]);
+    animate(pulseActive);
+  }, [pulseActive]);
+
+  // Fetch org's active deliveries and geocode them
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const q = query(
+      collection(db, "requests"),
+      where("organizationId", "==", user.uid),
+      where("status", "==", "in_progress"),
+    );
+
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      const reqs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+      // Geocode all dropoff locations concurrently
+      const coordsPromises = reqs.map(async (req) => {
+        try {
+          const res = await Location.geocodeAsync(req.dropoff);
+          if (res.length > 0) {
+            return {
+              id: req.id,
+              title: req.title,
+              latitude: res[0].latitude,
+              longitude: res[0].longitude,
+            };
+          }
+        } catch (e) {
+          console.warn("Geocode error for", req.dropoff);
+        }
+        return null;
+      });
+
+      const resolvedCoords = await Promise.all(coordsPromises);
+    
+      setActiveDeliveries(resolvedCoords.filter((c) => c !== null));
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // We need a baseline dropoff for GeolocationRoute to render properly
+  const defaultDropoff =
+    activeDeliveries.length > 0
+      ? {
+          latitude: activeDeliveries[0].latitude,
+          longitude: activeDeliveries[0].longitude,
+        }
+      : { latitude: 34.4127, longitude: -119.861 };
 
   return (
     <View style={styles.container}>
@@ -44,38 +106,40 @@ export default function OrganizationMap() {
         <Building2 color="#fff" size={24} />
       </LinearGradient>
 
-      {/* ✅ REAL MAP (no static Image) */}
+      {/* Map */}
       <View style={styles.mapContainer}>
-        <GeolocationRoute dropoff={DROP_OFF} showDirections>
-          {/* Inject your markers into the MapView */}
-          {ACTIVE_DELIVERIES.map((coord, idx) => (
-            <Marker key={`active-${idx}`} coordinate={coord} title="Active Delivery">
-              <Animated.View
-                style={[
-                  styles.marker,
-                  styles.markerActive,
-                  { transform: [{ scale: idx === 0 ? pulseActive1 : pulseActive2 }] },
-                ]}
+        {loading ? (
+          <View style={styles.center}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          </View>
+        ) : (
+          <GeolocationRoute dropoff={defaultDropoff} showDirections={false}>
+            {activeDeliveries.map((delivery) => (
+              <Marker
+                key={delivery.id}
+                coordinate={delivery}
+                title={delivery.title}
               >
-                <MapPin color="#fff" size={16} />
-              </Animated.View>
-            </Marker>
-          ))}
-
-          {COMPLETED_DELIVERIES.map((coord, idx) => (
-            <Marker key={`completed-${idx}`} coordinate={coord} title="Completed Delivery">
-              <View style={[styles.marker, styles.markerCompleted]}>
-                <MapPin color="#fff" size={16} />
-              </View>
-            </Marker>
-          ))}
-        </GeolocationRoute>
+                <Animated.View
+                  style={[
+                    styles.marker,
+                    styles.markerActive,
+                    { transform: [{ scale: pulseActive }] },
+                  ]}
+                >
+                  <MapPin color="#fff" size={16} />
+                </Animated.View>
+              </Marker>
+            ))}
+          </GeolocationRoute>
+        )}
       </View>
 
       {/* Info Panel */}
       <View style={styles.infoCard}>
-        <Text style={styles.infoTitle}>Active Deliveries: {ACTIVE_DELIVERIES.length}</Text>
-        <Text style={styles.infoSubtitle}>Completed: {COMPLETED_DELIVERIES.length}</Text>
+        <Text style={styles.infoTitle}>
+          Active Deliveries on Route: {activeDeliveries.length}
+        </Text>
         <Text style={styles.infoStatus}>Tracking real-time progress</Text>
       </View>
     </View>
@@ -96,6 +160,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: { color: "#fff", fontSize: 18, fontWeight: "bold" },
   mapContainer: { flex: 1, overflow: "hidden" },
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
   marker: {
     width: 40,
     height: 40,
@@ -107,7 +172,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   markerActive: { backgroundColor: COLORS?.primary || "#4CAF50" },
-  markerCompleted: { backgroundColor: "#6B7280" },
   infoCard: {
     backgroundColor: "#fff",
     padding: 16,
@@ -115,7 +179,6 @@ const styles = StyleSheet.create({
     borderTopColor: "#E5E7EB",
   },
   infoTitle: { fontSize: 15, fontWeight: "600", color: "#1F2937" },
-  infoSubtitle: { color: "#6B7280", fontSize: 13, marginTop: 2 },
   infoStatus: {
     color: COLORS?.primary || "#4CAF50",
     fontWeight: "600",

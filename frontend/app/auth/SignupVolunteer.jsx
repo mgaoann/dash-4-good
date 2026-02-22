@@ -3,17 +3,24 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Alert,
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Button from "../../components/Button";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
+// Firebase imports
+import { auth, db } from "../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+
 export default function SignupVolunteer() {
   const router = useRouter();
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -22,109 +29,220 @@ export default function SignupVolunteer() {
     password: "",
   });
 
-  const update = (key, value) => setForm({ ...form, [key]: value });
+  // Custom UI states for error handling and loading
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSignup = () => {
-    if (!form.firstName || !form.lastName || !form.email || !form.password) {
-      Alert.alert("Missing info", "Please fill all required fields.");
+  const update = (key, value) => {
+    setForm({ ...form, [key]: value });
+    // Clear error message when the user starts typing again
+    if (errorMessage) setErrorMessage("");
+  };
+
+  const onSignup = async () => {
+    setErrorMessage(""); // Reset error state
+
+    // 1. Clean up inputs
+    const safeFirstName = form.firstName.trim();
+    const safeLastName = form.lastName.trim();
+    const safeEmail = form.email.trim();
+    const safePassword = form.password;
+
+    // 2. Custom Validation: Empty Fields
+    if (!safeFirstName || !safeLastName || !safeEmail || !safePassword) {
+      setErrorMessage(
+        "First Name, Last Name, Email, and Password are required.",
+      );
       return;
     }
-    // TODO: implement actual account creation
-    router.replace("/tabs-volunteer/home");
+
+    // 3. Custom Validation: Email Format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(safeEmail)) {
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+
+    // 4. Custom Validation: Password Length
+    if (safePassword.length < 6) {
+      setErrorMessage("Password must be at least 6 characters long.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Create the user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        safeEmail,
+        safePassword,
+      );
+      const uid = userCredential.user.uid;
+
+      // Save the volunteer profile to Firestore
+      await setDoc(doc(db, "users", uid), {
+        role: "volunteer",
+        firstName: safeFirstName,
+        lastName: safeLastName,
+        email: safeEmail,
+        phone: form.phone.trim(),
+        createdAt: new Date().toISOString(),
+      });
+
+      // Navigate to Dashboard on success
+      router.replace("/tabs-volunteer/home");
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Detect small vs large screen
   const screenWidth = Dimensions.get("window").width;
-  const isSmallScreen = screenWidth < 380; // tweak breakpoint if needed
+  const isSmallScreen = screenWidth < 380;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Create a Volunteer Account</Text>
+   
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "#F9FAFB" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled" 
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.title}>Create a Volunteer Account</Text>
 
-      {/* First Name & Last Name */}
-      <View style={[styles.row, isSmallScreen && styles.column]}>
+        {/* Custom Error UI */}
+        {errorMessage !== "" && (
+          <View style={styles.errorBox}>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </View>
+        )}
+
+        {/* First Name & Last Name */}
+        <View style={[styles.row, isSmallScreen && styles.column]}>
+          <View style={styles.field}>
+            <Text style={styles.label}>
+              First Name <Text style={{ color: "#dc2626" }}>*</Text>
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Your First Name"
+              placeholderTextColor="#6B7280"
+              value={form.firstName}
+              onChangeText={(v) => update("firstName", v)}
+            />
+          </View>
+
+          <View style={[styles.field, !isSmallScreen && { marginLeft: 12 }]}>
+            <Text style={styles.label}>
+              Last Name <Text style={{ color: "#dc2626" }}>*</Text>
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Your Last Name"
+              placeholderTextColor="#6B7280"
+              value={form.lastName}
+              onChangeText={(v) => update("lastName", v)}
+            />
+          </View>
+        </View>
+
+        {/* Email */}
         <View style={styles.field}>
-          <Text style={styles.label}>First Name <Text style={{ color: '#dc2626' }}>*</Text></Text>
+          <Text style={styles.label}>
+            Email <Text style={{ color: "#dc2626" }}>*</Text>
+          </Text>
           <TextInput
             style={styles.input}
-            placeholder="Your First Name"
+            placeholder="Your Email"
             placeholderTextColor="#6B7280"
-            value={form.firstName}
-            onChangeText={(v) => update("firstName", v)}
+            value={form.email}
+            onChangeText={(v) => update("email", v)}
+            autoCapitalize="none"
+            keyboardType="email-address"
           />
         </View>
 
-        <View style={[styles.field, !isSmallScreen && { marginLeft: 12 }]}>
-          <Text style={styles.label}>Last Name <Text style={{ color: '#dc2626' }}>*</Text></Text>
+        {/* Phone */}
+        <View style={styles.field}>
+          <Text style={styles.label}>Phone (optional)</Text>
           <TextInput
             style={styles.input}
-            placeholder="Your Last Name"
+            placeholder="Your Phone Number"
             placeholderTextColor="#6B7280"
-            value={form.lastName}
-            onChangeText={(v) => update("lastName", v)}
+            value={form.phone}
+            onChangeText={(v) => update("phone", v)}
+            keyboardType="phone-pad"
           />
         </View>
-      </View>
 
-      {/* Email */}
-      <View style={styles.field}>
-        <Text style={styles.label}>Email <Text style={{ color: '#dc2626' }}>*</Text></Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Your Email"
-          placeholderTextColor="#6B7280"
-          value={form.email}
-          onChangeText={(v) => update("email", v)}
-          autoCapitalize="none"
+        {/* Password */}
+        <View style={styles.field}>
+          <Text style={styles.label}>
+            Password <Text style={{ color: "#dc2626" }}>*</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Your Password"
+            placeholderTextColor="#6B7280"
+            value={form.password}
+            onChangeText={(v) => update("password", v)}
+            secureTextEntry
+          />
+        </View>
+
+        <Button
+          title={isLoading ? "Creating Account..." : "Sign Up"}
+          onPress={isLoading ? null : onSignup}
+          style={{ marginTop: 12 }}
         />
-      </View>
 
-      {/* Phone */}
-      <View style={styles.field}>
-        <Text style={styles.label}>Phone (optional)</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Your Phone Number"
-          placeholderTextColor="#6B7280"
-          value={form.phone}
-          onChangeText={(v) => update("phone", v)}
-        />
-      </View>
-
-      {/* Password */}
-      <View style={styles.field}>
-        <Text style={styles.label}>Password <Text style={{ color: '#dc2626' }}>*</Text></Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Your Password"
-          placeholderTextColor="#6B7280"
-          value={form.password}
-          onChangeText={(v) => update("password", v)}
-          secureTextEntry
-        />
-      </View>
-
-      <Button title="Sign Up" onPress={onSignup} style={{ marginTop: 12 }} />
-
-      <View style={styles.altRow}>
-        <Text style={styles.altText}>Already have an account?</Text>
-        <TouchableOpacity onPress={() => router.push("/auth/Login")}>
-          <Text style={styles.altLink}> Log in</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        <View style={styles.altRow}>
+          <Text style={styles.altText}>Already have an account?</Text>
+          <TouchableOpacity onPress={() => router.push("/auth/Login")}>
+            <Text style={styles.altLink}> Log in</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
+  container: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    flexGrow: 1,
+    paddingBottom: 100, // Fix 3: Added deeper padding for the bottom layout
+  },
   title: {
     fontSize: 25,
     fontWeight: "700",
     color: "#1F2937",
-    marginBottom: 40,
+    marginBottom: 20,
     marginTop: 40,
     textAlign: "center",
+  },
+  errorBox: {
+    width: "100%",
+    backgroundColor: "#FEE2E2",
+    borderWidth: 1,
+    borderColor: "#F87171",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  errorText: {
+    color: "#B91C1C",
+    fontSize: 14,
+    textAlign: "center",
+    fontWeight: "500",
   },
   row: {
     flexDirection: "row",

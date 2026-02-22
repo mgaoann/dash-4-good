@@ -2,23 +2,16 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { MapPin, Package, Map, CheckCircle } from "lucide-react-native";
 import { COLORS } from "../styles/global";
-import { activeDeliveries } from "../data/dummyDeliveries";
-// TODO (Map/Geo): Hook up Google Maps API so "View Route" opens live map directions
-// between pickup and dropoff
-// TODO (Backend): Update Firestore when delivery is marked complete
-// (set status = "completed" and free it from volunteer’s active list)
-// TODO (Notifications): Send push notification to organization that delivery is completed
-
-export default function ActiveDeliveries() {
-  const completeDelivery = (id) => {
-    console.log("Completed:", id);
-  };
-
+export default function ActiveDeliveries({
+  items = [],
+  onComplete,
+  onViewRoute,
+}) {
   const renderCard = ({ item }) => (
     <View style={styles.card}>
       <View style={styles.headerRow}>
@@ -44,13 +37,18 @@ export default function ActiveDeliveries() {
       </View>
 
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.outlineButton}>
+        {/* NEW: Added onPress and passed the item back to the parent */}
+        <TouchableOpacity
+          style={styles.outlineButton}
+          onPress={() => onViewRoute && onViewRoute(item)}
+        >
           <Map size={16} color="#374151" style={styles.icon} />
           <Text style={styles.outlineText}>View Route</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.completeButton}
-          onPress={() => completeDelivery(item.id)}
+          onPress={() => onComplete && onComplete(item)}
         >
           <CheckCircle size={16} color="white" style={styles.icon} />
           <Text style={styles.completeText}>Mark Complete</Text>
@@ -62,20 +60,24 @@ export default function ActiveDeliveries() {
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Active Deliveries</Text>
-      <FlatList
-        data={activeDeliveries}
-        renderItem={renderCard}
-        scrollEnabled={false}
-        keyExtractor={(item) => item.id}
-      />
+      {items.length === 0 ? (
+        <Text style={{ color: "#6B7280", marginBottom: 20 }}>
+          No active deliveries.
+        </Text>
+      ) : (
+        <FlatList
+          data={items}
+          renderItem={renderCard}
+          scrollEnabled={false}
+          keyExtractor={(item) => item.id}
+        />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  section: {
-    marginTop: 9,
-  },
+  section: { marginTop: 9 },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
@@ -91,47 +93,26 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     marginBottom: 15,
     borderLeftWidth: 4,
-  borderLeftColor: "#3B82F6",
+    borderLeftColor: "#3B82F6",
   },
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 8,
   },
-  title: {
-    fontWeight: "600",
-    fontSize: 15,
-    color: "#1F2937",
-  },
+  title: { fontWeight: "600", fontSize: 15, color: "#1F2937" },
   badge: {
     backgroundColor: "#DBEAFE",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
   },
-  badgeText: {
-    fontSize: 12,
-    color: "#1E40AF",
-  },
-  details: {
-    marginBottom: 12,
-  },
-  detailRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 6,
-  },
-  icon: {
-    marginRight: 6,
-  },
-  detail: {
-    fontSize: 13,
-    color: "#4B5563",
-  },
-  actions: {
-    flexDirection: "row",
-    gap: 8,
-  },
+  badgeText: { fontSize: 12, color: "#1E40AF" },
+  details: { marginBottom: 12 },
+  detailRow: { flexDirection: "row", alignItems: "center", marginBottom: 6 },
+  icon: { marginRight: 6 },
+  detail: { fontSize: 13, color: "#4B5563" },
+  actions: { flexDirection: "row", gap: 8 },
   outlineButton: {
     flex: 1,
     borderWidth: 1,
@@ -142,14 +123,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  outlineText: {
-    fontSize: 13,
-    color: "#374151",
-    marginLeft: 4,
-  },
+  outlineText: { fontSize: 13, color: "#374151", marginLeft: 4 },
   completeButton: {
     flex: 1,
-  backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.primary,
     padding: 10,
     borderRadius: 8,
     flexDirection: "row",
